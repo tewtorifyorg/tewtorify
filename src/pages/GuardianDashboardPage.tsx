@@ -1,11 +1,39 @@
-// Placeholder — Guardian Dashboard (Milestone 5)
+// ============================================================
+// Tewtorify — Guardian Dashboard (Live Firestore Data)
+// ============================================================
+
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, Search, Megaphone, Star, ClipboardList } from 'lucide-react';
+import {
+  Plus, Search, Megaphone, Star, ClipboardList, Loader2,
+  MapPin, BookOpen, DollarSign, Clock,
+} from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
+import { getGuardianRequests } from '@/lib/firestore';
+import { CLASS_LEVELS } from '@/lib/constants';
+import { formatBDT, timeAgo } from '@/lib/utils';
+import type { TuitionRequest } from '@/types';
 
 export default function GuardianDashboardPage() {
-  const { userProfile } = useAuth();
+  const { user, userProfile } = useAuth();
+  const [requests, setRequests] = useState<TuitionRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (!user) return;
+      try {
+        const data = await getGuardianRequests(user.uid);
+        setRequests(data);
+      } catch (err) {
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRequests();
+  }, [user]);
 
   const actions = [
     { to: '/guardian/post-request', icon: Plus, label: 'Post Tuition Request', desc: 'Create a new request and get AI-matched tutors' },
@@ -13,6 +41,19 @@ export default function GuardianDashboardPage() {
     { to: '/browse-ads', icon: Search, label: 'Browse Ads', desc: 'See public tuition advertisements' },
     { to: '/guardian/reviews', icon: Star, label: 'My Reviews', desc: 'Leave reviews for confirmed tutors' },
   ];
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'open':
+        return <span className="px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 text-xs font-medium">Open</span>;
+      case 'matched':
+        return <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 text-xs font-medium">Matched</span>;
+      case 'closed':
+        return <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">Closed</span>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-12">
@@ -53,22 +94,78 @@ export default function GuardianDashboardPage() {
           ))}
         </div>
 
-        {/* Active Requests Placeholder */}
+        {/* Active Requests */}
         <div className="mt-10">
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <ClipboardList className="h-5 w-5 text-primary" />
             Your Tuition Requests
           </h2>
-          <div className="rounded-xl bg-card border border-border p-8 text-center">
-            <p className="text-muted-foreground">No tuition requests yet.</p>
-            <Link
-              to="/guardian/post-request"
-              className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-lg gradient-primary text-white text-sm font-semibold"
-            >
-              <Plus className="h-4 w-4" />
-              Post Your First Request
-            </Link>
-          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+          ) : requests.length === 0 ? (
+            <div className="rounded-xl bg-card border border-border p-8 text-center">
+              <p className="text-muted-foreground">No tuition requests yet.</p>
+              <Link
+                to="/guardian/post-request"
+                className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-lg gradient-primary text-white text-sm font-semibold"
+              >
+                <Plus className="h-4 w-4" />
+                Post Your First Request
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {requests.map((req, i) => (
+                <motion.div
+                  key={req.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + i * 0.05 }}
+                  className="rounded-xl bg-card border border-border p-5 hover:border-primary/20 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-semibold">
+                          {CLASS_LEVELS.find((l) => l.value === req.studentClassLevel)?.label || req.studentClassLevel}
+                        </span>
+                        {getStatusBadge(req.status)}
+                        <span className="text-xs text-muted-foreground">{timeAgo(req.createdAt)}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {req.subjects.map((s) => (
+                          <span key={s} className="px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs">{s}</span>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />{req.area}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <DollarSign className="h-3 w-3" />
+                          {formatBDT(req.budgetMin)}–{formatBDT(req.budgetMax)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />{req.timingPreference}
+                        </span>
+                      </div>
+                    </div>
+                    {req.status === 'matched' && (
+                      <Link
+                        to={`/guardian/matches/${req.id}`}
+                        className="shrink-0 px-3 py-1.5 rounded-lg gradient-primary text-white text-xs font-semibold"
+                      >
+                        View Matches
+                      </Link>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -13,24 +13,24 @@ import LandingPage from '@/pages/LandingPage';
 import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import GuardianDashboardPage from '@/pages/GuardianDashboardPage';
+import GuardianPostRequestPage from '@/pages/GuardianPostRequestPage';
 import TutorDashboardPage from '@/pages/TutorDashboardPage';
+import TutorApplyPage from '@/pages/TutorApplyPage';
+import TutorProfilePage from '@/pages/TutorProfilePage';
+import TutorBrowseRequestsPage from '@/pages/TutorBrowseRequestsPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
+import AdminVerificationsPage from '@/pages/AdminVerificationsPage';
+import AdminMatchesPage from '@/pages/AdminMatchesPage';
+import AdminDonationsPage from '@/pages/AdminDonationsPage';
+import AdminAdminsPage from '@/pages/AdminAdminsPage';
+import BrowseAdsPage from '@/pages/BrowseAdsPage';
+import DonatePage from '@/pages/DonatePage';
 
-// Placeholder Pages (will be replaced with real implementations)
+// Remaining placeholder pages (will be implemented later)
 import {
-  GuardianPostRequestPage,
   GuardianMatchesPage,
   GuardianPostAdPage,
   GuardianReviewsPage,
-  TutorApplyPage,
-  TutorProfilePage,
-  TutorBrowseRequestsPage,
-  AdminVerificationsPage,
-  AdminMatchesPage,
-  AdminDonationsPage,
-  AdminAdminsPage,
-  BrowseAdsPage,
-  DonatePage,
 } from '@/pages/PlaceholderPages';
 
 // ---------- Layout Wrappers ----------

@@ -1,4 +1,4 @@
-// Placeholder pages — will be fully implemented in later milestones
+// Placeholder pages — remaining pages to be fully implemented
 // Each page is a simple component with a title and description
 
 import { motion } from 'framer-motion';
@@ -29,11 +29,7 @@ function PlaceholderPage({ title, description }: { title: string; description: s
   );
 }
 
-// ---------- Guardian Pages ----------
-
-export function GuardianPostRequestPage() {
-  return <PlaceholderPage title="Post Tuition Request" description="This form will let you specify subject, class level, area, budget, and more to find the perfect tutor match." />;
-}
+// ---------- Guardian Pages (remaining placeholders) ----------
 
 export function GuardianMatchesPage() {
   return <PlaceholderPage title="Your Matches" description="AI-recommended tutors for your request will appear here with match scores and reasoning." />;
@@ -45,46 +41,4 @@ export function GuardianPostAdPage() {
 
 export function GuardianReviewsPage() {
   return <PlaceholderPage title="Your Reviews" description="Leave and view reviews for your confirmed tutor engagements." />;
-}
-
-// ---------- Tutor Pages ----------
-
-export function TutorApplyPage() {
-  return <PlaceholderPage title="Tutor Application" description="Complete your profile, upload certificates and NID to apply for verification." />;
-}
-
-export function TutorProfilePage() {
-  return <PlaceholderPage title="Your Profile" description="View and edit your tutor profile, qualifications, and preferences." />;
-}
-
-export function TutorBrowseRequestsPage() {
-  return <PlaceholderPage title="Browse Tuition Requests" description="Browse and apply to open tuition requests from guardians." />;
-}
-
-// ---------- Admin Pages ----------
-
-export function AdminVerificationsPage() {
-  return <PlaceholderPage title="Verification Queue" description="Review pending tutor applications, view documents, and approve or reject." />;
-}
-
-export function AdminMatchesPage() {
-  return <PlaceholderPage title="Manage Matches" description="View all matches, manage contact requests, and confirm engagements." />;
-}
-
-export function AdminDonationsPage() {
-  return <PlaceholderPage title="Donation Ledger" description="View and add donation records for the platform." />;
-}
-
-export function AdminAdminsPage() {
-  return <PlaceholderPage title="Manage Admins" description="Promote or remove admin accounts (super_admin only)." />;
-}
-
-// ---------- Public Pages ----------
-
-export function BrowseAdsPage() {
-  return <PlaceholderPage title="Tuition Advertisements" description="Browse public tuition ads posted by guardians looking for tutors." />;
-}
-
-export function DonatePage() {
-  return <PlaceholderPage title="Donate" description="Support Tewtorify with your donation. Every contribution keeps this platform free." />;
 }
