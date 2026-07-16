@@ -1,16 +1,18 @@
 // ============================================================
 // Tewtorify — Landing Page
+// Professional BD-focused design, no AI jargon
 // ============================================================
 
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  GraduationCap, Shield, Brain, Heart, Users, BookOpen,
-  ArrowRight, CheckCircle2, Sparkles, TrendingUp,
+  GraduationCap, Shield, Heart, Users, BookOpen,
+  ArrowRight, CheckCircle2, UserCheck, ClipboardCheck,
+  Search, BadgeCheck,
 } from 'lucide-react';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -24,11 +26,10 @@ export default function LandingPage() {
     <div className="overflow-hidden">
       {/* ============ HERO SECTION ============ */}
       <section className="relative min-h-screen flex items-center gradient-hero overflow-hidden">
-        {/* Background Effects */}
+        {/* Subtle background decoration */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-accent/8 blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 pt-32">
@@ -38,10 +39,10 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/90 text-sm font-medium mb-8"
             >
-              <Sparkles className="h-3.5 w-3.5" />
-              100% Free, Donation-Funded
+              <BadgeCheck className="h-3.5 w-3.5" />
+              সম্পূর্ণ বিনামূল্যে — Completely Free
             </motion.div>
 
             {/* Title */}
@@ -51,9 +52,9 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
             >
-              Connecting Pabna with{' '}
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Verified Tutors
+              পাবনার বিশ্বস্ত{' '}
+              <span className="bg-gradient-to-r from-amber-300 to-amber-200 bg-clip-text text-transparent">
+                টিউশন প্ল্যাটফর্ম
               </span>
             </motion.h1>
 
@@ -62,11 +63,20 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 text-lg text-white/60 leading-relaxed max-w-2xl mx-auto"
+              className="mt-6 text-lg text-white/65 leading-relaxed max-w-2xl mx-auto"
             >
-              Tired of overcharging tuition media? Tewtorify is a community-driven platform
-              that matches students with verified tutors using AI — completely free for everyone.
-              No hidden fees. No commissions. Just quality education.
+              মিডিয়ার অতিরিক্ত চার্জে বিরক্ত? Tewtorify তে প্রতিটি শিক্ষক আমাদের টিম 
+              manually verify করে। কোনো ফি নেই, কোনো কমিশন নেই — শুধু মানসম্মত শিক্ষা।
+            </motion.p>
+
+            {/* English subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="mt-3 text-sm text-white/45 max-w-xl mx-auto"
+            >
+              Community-driven platform connecting verified tutors with students in Pabna. Zero fees for everyone.
             </motion.p>
 
             {/* CTAs */}
@@ -78,7 +88,7 @@ export default function LandingPage() {
             >
               <Link
                 to="/signup"
-                className="px-8 py-3.5 rounded-xl gradient-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
+                className="px-8 py-3.5 rounded-xl bg-white text-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
               >
                 Get Started Free
                 <ArrowRight className="h-4 w-4" />
@@ -101,8 +111,8 @@ export default function LandingPage() {
             >
               {[
                 { value: '100%', label: 'Free' },
-                { value: 'AI', label: 'Matching' },
-                { value: 'Verified', label: 'Tutors' },
+                { value: 'Verified', label: 'Teachers' },
+                { value: 'Manual', label: 'Review' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-2xl font-bold text-white">{stat.value}</div>
@@ -114,7 +124,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ============ PROBLEM SECTION ============ */}
+      {/* ============ WHY TEWTORIFY ============ */}
       <section className="py-20 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -128,16 +138,15 @@ export default function LandingPage() {
               custom={0}
               className="text-3xl sm:text-4xl font-bold text-foreground"
             >
-              The Problem We're Solving
+              কেন Tewtorify?
             </motion.h2>
             <motion.p
               variants={fadeUp}
               custom={1}
               className="mt-4 text-muted-foreground leading-relaxed"
             >
-              Tuition media in Pabna charge hefty fees to both tutors and guardians.
-              Students lose access to quality education because of financial barriers.
-              We believe matching tutors with students should be free.
+              পাবনায় মিডিয়া শিক্ষক ও অভিভাবক উভয়ের কাছ থেকে অতিরিক্ত ফি নেয়।
+              আমরা বিশ্বাস করি টিউটর খোঁজা সম্পূর্ণ ফ্রি হওয়া উচিত।
             </motion.p>
           </motion.div>
 
@@ -145,24 +154,27 @@ export default function LandingPage() {
             {[
               {
                 icon: Shield,
-                title: 'Verified Tutors Only',
-                description: 'Every tutor is manually verified by our admin team. We check certificates, NID, and academic background before they can apply to teach.',
+                title: 'Manually Verified Teachers',
+                description: 'প্রতিটি শিক্ষক আমাদের admin team manually verify করে। Certificate, NID, ও academic background পরীক্ষা করা হয়।',
+                titleBn: 'প্রতিটি শিক্ষক যাচাইকৃত',
                 color: 'text-primary',
-                bg: 'bg-primary/10',
+                bg: 'bg-primary/8',
               },
               {
-                icon: Brain,
-                title: 'AI-Powered Matching',
-                description: 'Our AI doesn\'t just keyword-match — it checks academic background fit. A History major won\'t be recommended for HSC Physics.',
+                icon: ClipboardCheck,
+                title: 'Strict Subject Matching',
+                description: 'Science background ছাড়া Science পড়ানো যাবে না। আমরা নিশ্চিত করি শিক্ষকের qualification subject-এর সাথে মিলে।',
+                titleBn: 'সঠিক বিষয়ে সঠিক শিক্ষক',
                 color: 'text-accent',
-                bg: 'bg-accent/10',
+                bg: 'bg-accent/8',
               },
               {
                 icon: Heart,
                 title: 'Donation-Funded',
-                description: 'The entire platform runs on community donations. No registration fee. No commission. No hidden charges — ever.',
+                description: 'পুরো প্ল্যাটফর্ম community donation-এ চলে। কোনো registration fee নেই, কোনো commission নেই — কখনোই না।',
+                titleBn: 'সম্পূর্ণ বিনামূল্যে',
                 color: 'text-destructive',
-                bg: 'bg-destructive/10',
+                bg: 'bg-destructive/8',
               },
             ].map((feature, i) => (
               <motion.div
@@ -172,12 +184,13 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i + 2}
-                className="p-6 rounded-2xl bg-card border border-border hover:border-primary/20 hover:shadow-lg transition-all duration-300 group"
+                className="p-6 rounded-2xl bg-card border border-border hover:border-primary/20 hover:shadow-md transition-all duration-300 group"
               >
                 <div className={`h-12 w-12 rounded-xl ${feature.bg} ${feature.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                   <feature.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{feature.title}</h3>
+                <p className="text-xs text-primary font-medium mb-2">{feature.titleBn}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
@@ -186,7 +199,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section id="how-it-works" className="py-20 bg-muted/30">
+      <section id="how-it-works" className="py-20 gradient-warm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="hidden"
@@ -199,14 +212,14 @@ export default function LandingPage() {
               custom={0}
               className="text-3xl sm:text-4xl font-bold text-foreground"
             >
-              How It Works
+              কিভাবে কাজ করে?
             </motion.h2>
             <motion.p
               variants={fadeUp}
               custom={1}
               className="mt-4 text-muted-foreground"
             >
-              Three simple steps to connect with the right tutor
+              তিনটি সহজ ধাপে সঠিক শিক্ষক খুঁজে নিন
             </motion.p>
           </motion.div>
 
@@ -215,20 +228,23 @@ export default function LandingPage() {
               {
                 step: '01',
                 icon: Users,
-                title: 'Sign Up Free',
-                description: 'Create your account as a Guardian (to find tutors) or as a Tutor (to offer your services). It takes less than a minute.',
+                title: 'Register Free',
+                titleBn: 'ফ্রি রেজিস্ট্রেশন করুন',
+                description: 'Guardian হিসেবে (শিক্ষক খুঁজতে) অথবা Tutor হিসেবে (শেখাতে) account তৈরি করুন। এক মিনিটেরও কম সময় লাগবে।',
               },
               {
                 step: '02',
-                icon: TrendingUp,
-                title: 'Get Matched by AI',
-                description: 'Post what you need — subject, class, area, budget. Our AI analyzes academic fit and recommends the best-matching verified tutors.',
+                icon: UserCheck,
+                title: 'Admin Verifies',
+                titleBn: 'Admin যাচাই করেন',
+                description: 'আমাদের admin team প্রতিটি শিক্ষকের পরিচয়, certificate ও academic background manually যাচাই করে। যাচাই হলে blue tick পাবেন।',
               },
               {
                 step: '03',
-                icon: GraduationCap,
-                title: 'Start Learning',
-                description: 'Request contact with your matched tutor. Our admin team shares the details and you\'re ready to begin — at zero cost.',
+                icon: Search,
+                title: 'Get Matched',
+                titleBn: 'শিক্ষক পান',
+                description: 'আপনার প্রয়োজন অনুযায়ী verified শিক্ষকদের সাথে match করা হবে। Admin contact share করবেন এবং পড়ানো শুরু — শূন্য খরচে।',
               },
             ].map((item, i) => (
               <motion.div
@@ -241,10 +257,11 @@ export default function LandingPage() {
                 className="relative text-center p-8"
               >
                 <div className="text-6xl font-black text-primary/10 mb-4">{item.step}</div>
-                <div className="h-14 w-14 rounded-2xl gradient-primary text-white flex items-center justify-center mx-auto mb-5 shadow-lg">
+                <div className="h-14 w-14 rounded-2xl gradient-primary text-white flex items-center justify-center mx-auto mb-5 shadow-md">
                   <item.icon className="h-7 w-7" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{item.title}</h3>
+                <p className="text-xs text-primary font-medium mb-2">{item.titleBn}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
@@ -265,20 +282,20 @@ export default function LandingPage() {
               custom={0}
               className="p-8 rounded-2xl bg-card border border-border"
             >
-              <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6">
+              <div className="h-12 w-12 rounded-xl bg-primary/8 text-primary flex items-center justify-center mb-6">
                 <Users className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-3">For Guardians & Students</h3>
+              <h3 className="text-xl font-bold text-foreground mb-3">অভিভাবক ও শিক্ষার্থীদের জন্য</h3>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                Find the perfect tutor without paying any middlemen. Just tell us what you need,
-                and our AI will match you with verified tutors whose expertise fits your requirements.
+                কোনো middleman-কে টাকা না দিয়ে সঠিক শিক্ষক খুঁজুন। শুধু আপনার প্রয়োজন জানান, 
+                আমাদের verified শিক্ষকদের মধ্য থেকে admin match করে দেবেন।
               </p>
               <ul className="space-y-3">
                 {[
-                  'Post tuition requests with your requirements',
-                  'Get AI-matched tutor recommendations',
-                  'Browse public tuition ads',
-                  'Leave reviews after confirmed engagements',
+                  'টিউশনের প্রয়োজন post করুন',
+                  'Admin-verified শিক্ষক পান',
+                  'Public tuition ads browse করুন',
+                  'শিক্ষকদের review দিন',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
@@ -288,9 +305,9 @@ export default function LandingPage() {
               </ul>
               <Link
                 to="/signup"
-                className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-sm hover:shadow-md transition-all"
               >
-                Find a Tutor
+                শিক্ষক খুঁজুন
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>
@@ -304,20 +321,20 @@ export default function LandingPage() {
               custom={1}
               className="p-8 rounded-2xl bg-card border border-border"
             >
-              <div className="h-12 w-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6">
+              <div className="h-12 w-12 rounded-xl bg-accent/8 text-accent flex items-center justify-center mb-6">
                 <BookOpen className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-3">For Tutors</h3>
+              <h3 className="text-xl font-bold text-foreground mb-3">শিক্ষকদের জন্য</h3>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                Get verified, build your reputation, and connect with students who genuinely need
-                your expertise. No commission — you keep 100% of your earnings.
+                Verified হন, আপনার reputation তৈরি করুন, এবং সত্যিকারের শিক্ষার্থীদের সাথে 
+                connect হন। কোনো commission নেই — আপনি 100% রাখবেন।
               </p>
               <ul className="space-y-3">
                 {[
-                  'Get manually verified for trust',
-                  'Appear in AI-powered recommendations',
-                  'Browse open tuition requests',
-                  'Build ratings & reviews over time',
+                  'Admin-verified হয়ে blue tick পান',
+                  'Open tuition requests browse করুন',
+                  'Rating ও review তৈরি করুন',
+                  'কোনো ফি বা commission নেই',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
@@ -327,9 +344,9 @@ export default function LandingPage() {
               </ul>
               <Link
                 to="/signup"
-                className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-accent text-accent-foreground text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-accent text-accent-foreground text-sm font-semibold shadow-sm hover:shadow-md transition-all"
               >
-                Become a Tutor
+                শিক্ষক হিসেবে যোগ দিন
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>
@@ -340,8 +357,8 @@ export default function LandingPage() {
       {/* ============ DONATE CTA ============ */}
       <section className="py-20 gradient-hero relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/3 w-80 h-80 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 right-1/3 w-60 h-60 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute top-0 left-1/3 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute bottom-0 right-1/3 w-60 h-60 rounded-full bg-accent/8 blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
@@ -362,15 +379,15 @@ export default function LandingPage() {
               custom={1}
               className="text-3xl sm:text-4xl font-bold text-white mb-4"
             >
-              Help Us Stay Free Forever
+              আমাদের সাহায্য করুন
             </motion.h2>
             <motion.p
               variants={fadeUp}
               custom={2}
               className="text-white/60 mb-8 leading-relaxed"
             >
-              Tewtorify runs entirely on donations from the community. Your contribution
-              helps us maintain the platform, verify tutors, and expand to more districts.
+              Tewtorify সম্পূর্ণ community donation-এ চলে। আপনার সাহায্য আমাদের
+              platform maintain, শিক্ষক verify, এবং আরও জেলায় expand করতে সাহায্য করবে।
             </motion.p>
             <motion.div
               variants={fadeUp}
@@ -378,7 +395,7 @@ export default function LandingPage() {
             >
               <Link
                 to="/donate"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-accent text-accent-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
               >
                 <Heart className="h-4 w-4" />
                 Donate Now

@@ -67,7 +67,11 @@ export default function SignupPage() {
           setError('Password is too weak. Please use a stronger password.');
           break;
         default:
-          setError('An unexpected error occurred. Please try again.');
+          if (err instanceof Error) {
+            setError(`Error: ${err.message}`);
+          } else {
+            setError('An unexpected error occurred. Please try again.');
+          }
       }
     } finally {
       setIsLoading(false);
@@ -79,15 +83,15 @@ export default function SignupPage() {
       value: 'guardian' as UserRole,
       icon: Users,
       title: 'Guardian / Student',
-      description: 'Find verified tutors for yourself or your child. Post tuition requests and get AI-matched recommendations.',
-      features: ['Post tuition requests', 'AI-powered tutor matching', 'Leave verified reviews'],
+      description: 'আপনার বা আপনার সন্তানের জন্য verified শিক্ষক খুঁজুন। টিউশনের প্রয়োজন post করুন এবং admin-verified শিক্ষক পান।',
+      features: ['টিউশন request করুন', 'Admin-verified matching', 'Review দিন'],
     },
     {
       value: 'tutor' as UserRole,
       icon: BookOpen,
       title: 'Tutor',
-      description: 'Apply as a verified tutor. After admin approval, browse requests and get matched with students.',
-      features: ['Get verified & trusted', 'Browse open requests', 'Build your reputation'],
+      description: 'Verified শিক্ষক হিসেবে apply করুন। Admin approval-এর পর open request browse করুন এবং শিক্ষার্থীদের সাথে match হন।',
+      features: ['Verified হয়ে blue tick পান', 'Open request browse করুন', 'Reputation তৈরি করুন'],
     },
   ];
 
@@ -95,9 +99,9 @@ export default function SignupPage() {
     <div className="min-h-screen flex">
       {/* Left Panel — Branding (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 gradient-hero items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-primary blur-3xl" />
-          <div className="absolute bottom-1/3 -right-20 w-60 h-60 rounded-full bg-accent blur-3xl" />
+        <div className="absolute inset-0">
+          <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute bottom-1/3 -right-20 w-60 h-60 rounded-full bg-accent/8 blur-3xl" />
         </div>
 
         <motion.div
@@ -107,25 +111,25 @@ export default function SignupPage() {
           className="relative text-center text-white max-w-md"
         >
           <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="h-14 w-14 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+            <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-lg">
               <GraduationCap className="h-8 w-8" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-4">Join Tewtorify</h1>
-          <p className="text-base text-white/70 leading-relaxed">
-            A 100% free, donation-funded platform connecting verified tutors
-            with students in Pabna. No fees, no commissions — ever.
+          <h1 className="text-3xl font-bold mb-4">Tewtorify তে যোগ দিন</h1>
+          <p className="text-base text-white/65 leading-relaxed">
+            সম্পূর্ণ বিনামূল্যে, community-driven platform। পাবনার 
+            verified শিক্ষকদের সাথে connect হন। কোনো ফি নেই, কোনো commission নেই।
           </p>
 
           {/* Trust badges */}
           <div className="mt-10 flex flex-col gap-3">
             {[
-              'Manually verified tutors',
-              'AI-powered smart matching',
-              'Zero fees for everyone',
+              'প্রতিটি শিক্ষক manually verified',
+              'Admin-approved matching',
+              'সম্পূর্ণ বিনামূল্যে',
             ].map((badge) => (
               <div key={badge} className="flex items-center gap-2 text-sm text-white/80">
-                <CheckCircle2 className="h-4 w-4 text-green-400" />
+                <CheckCircle2 className="h-4 w-4 text-amber-300" />
                 {badge}
               </div>
             ))}

@@ -16,7 +16,7 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Detect scroll for glassmorphism header
+  // Detect scroll for header shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
@@ -69,18 +69,18 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-background/80 backdrop-blur-xl border-b border-border shadow-sm'
-          : 'bg-transparent'
+          ? 'bg-background/95 backdrop-blur-sm border-b border-border shadow-sm'
+          : 'bg-background/80 backdrop-blur-sm'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary text-white shadow-md transition-transform group-hover:scale-105">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary text-white shadow-sm transition-transform group-hover:scale-105">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+            <span className="text-xl font-bold tracking-tight text-foreground">
               Tewtorify
             </span>
           </Link>
@@ -93,7 +93,7 @@ export default function Header() {
                 to={link.to}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   location.pathname === link.to
-                    ? 'text-primary bg-primary/10'
+                    ? 'text-primary bg-primary/8'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
               >
@@ -175,7 +175,7 @@ export default function Header() {
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-lg text-sm font-semibold gradient-primary text-white shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold gradient-primary text-white shadow-sm hover:shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Sign Up
                 </Link>
@@ -202,7 +202,7 @@ export default function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-card/95 backdrop-blur-xl border-b border-border"
+            className="md:hidden overflow-hidden bg-card border-b border-border"
           >
             <nav className="px-4 py-3 flex flex-col gap-1">
               {publicLinks.map((link) => (
@@ -211,7 +211,7 @@ export default function Header() {
                   to={link.to}
                   className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === link.to
-                      ? 'text-primary bg-primary/10'
+                      ? 'text-primary bg-primary/8'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
@@ -257,7 +257,7 @@ export default function Header() {
                   </Link>
                   <Link
                     to="/signup"
-                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-center gradient-primary text-white shadow-md"
+                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-center gradient-primary text-white shadow-sm"
                   >
                     Sign Up
                   </Link>

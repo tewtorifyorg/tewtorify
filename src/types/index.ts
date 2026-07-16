@@ -85,8 +85,8 @@ export interface Match {
   requestId: string;
   tutorUid: string;
   guardianUid: string;
-  matchScore: number; // 0-100 from Groq
-  matchReasoning: string; // text from Groq
+  matchScore: number; // 0-100 admin-assigned fit score
+  matchReasoning: string; // admin notes on match quality
   status: MatchStatus;
   confirmedAt?: Timestamp;
   confirmedByAdmin?: string; // admin uid

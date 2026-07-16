@@ -18,8 +18,8 @@ export default function Footer() {
               <span className="text-lg font-bold tracking-tight">Tewtorify</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A community-driven, donation-funded platform connecting verified tutors 
-              with students in Pabna, Bangladesh. 100% free for everyone.
+              পাবনার বিশ্বস্ত টিউশন প্ল্যাটফর্ম। Admin-verified teachers, 
+              completely free for guardians and students. No hidden fees — ever.
             </p>
           </div>
 
@@ -76,20 +76,20 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@tewtorify.com"
+                  href="mailto:tewtorify@gmail.com"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Mail className="h-4 w-4 shrink-0" />
-                  hello@tewtorify.com
+                  tewtorify@gmail.com
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+8801XXXXXXXXX"
+                  href="https://tewtorify.online"
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Phone className="h-4 w-4 shrink-0" />
-                  +880 1XXX-XXXXXX
+                  tewtorify.online
                 </a>
               </li>
             </ul>
@@ -99,10 +99,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-border py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            © {currentYear} Tewtorify. 100% free, donation-funded.
+            © {currentYear} Tewtorify. সম্পূর্ণ বিনামূল্যে, community-driven.
           </p>
           <p className="text-xs text-muted-foreground flex items-center gap-1">
-            Built with <Heart className="h-3 w-3 text-destructive fill-destructive" /> for Pabna
+            Made with <Heart className="h-3 w-3 text-destructive fill-destructive" /> in Pabna
           </p>
         </div>
       </div>

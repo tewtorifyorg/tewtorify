@@ -66,9 +66,9 @@ export default function LoginPage() {
       {/* Left Panel — Branding (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 gradient-hero items-center justify-center p-12 relative overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-primary blur-3xl" />
-          <div className="absolute bottom-1/4 -right-20 w-60 h-60 rounded-full bg-accent blur-3xl" />
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute bottom-1/4 -right-20 w-60 h-60 rounded-full bg-accent/8 blur-3xl" />
         </div>
 
         <motion.div
@@ -78,14 +78,14 @@ export default function LoginPage() {
           className="relative text-center text-white max-w-md"
         >
           <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="h-14 w-14 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+            <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-lg">
               <GraduationCap className="h-8 w-8" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-4">Welcome back to Tewtorify</h1>
-          <p className="text-base text-white/70 leading-relaxed">
-            Continue connecting with verified tutors in Pabna.
-            100% free, donation-funded, community-driven.
+          <h1 className="text-3xl font-bold mb-4">স্বাগতম Tewtorify তে</h1>
+          <p className="text-base text-white/65 leading-relaxed">
+            পাবনার verified শিক্ষকদের সাথে আবার connect করুন।
+            সম্পূর্ণ বিনামূল্যে, community-driven.
           </p>
         </motion.div>
       </div>

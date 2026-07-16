@@ -14,9 +14,9 @@ import {
   Upload, X, CheckCircle2, AlertCircle, Loader2,
 } from 'lucide-react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/features/auth/AuthContext';
+import { compressImageToBase64 } from '@/lib/utils';
 import {
   CLASS_LEVELS, SUBJECTS, PABNA_THANAS, PABNA_SADAR_AREAS,
   TUTORING_MODES, QUALIFICATION_LEVELS, INSTITUTION_SUGGESTIONS,
@@ -135,12 +135,7 @@ export default function TutorApplyPage() {
     if (file) setNidFile(file);
   };
 
-  // Upload file to Firebase Storage
-  const uploadFile = async (file: File, path: string): Promise<string> => {
-    const storageRef = ref(storage, path);
-    const snapshot = await uploadBytes(storageRef, file);
-    return getDownloadURL(snapshot.ref);
-  };
+  // No longer using Firebase Storage; handled inline via base64 compression
 
   // Submit handler
   const onSubmit = async (data: TutorApplicationForm) => {
@@ -158,15 +153,13 @@ export default function TutorApplyPage() {
     setSubmitError('');
 
     try {
-      // Upload certificates
+      // Compress and encode certificates to Base64 (max 800px width, 60% quality)
       const certificateUrls = await Promise.all(
-        certificates.map((file, i) =>
-          uploadFile(file, `certificates/${user.uid}/${Date.now()}_${i}_${file.name}`)
-        )
+        certificates.map((file) => compressImageToBase64(file, 800, 0.6))
       );
 
-      // Upload NID
-      const nidUrl = await uploadFile(nidFile, `nid/${user.uid}/${Date.now()}_${nidFile.name}`);
+      // Compress and encode NID to Base64
+      const nidUrl = await compressImageToBase64(nidFile, 800, 0.6);
 
       // Create tutor profile document
       await setDoc(doc(db, 'tutorProfiles', user.uid), {
@@ -806,6 +799,22 @@ export default function TutorApplyPage() {
                   <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     {submitError}
+                  </div>
+                )}
+                {Object.keys(errors).length > 0 && (
+                  <div className="flex flex-col gap-2 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                    <div className="flex items-center gap-2 font-semibold">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      Please fix the following errors before submitting:
+                    </div>
+                    <ul className="list-disc list-inside space-y-1">
+                      {Object.entries(errors).map(([field, err]) => (
+                        <li key={field}>
+                          <span className="font-medium capitalize">{field.replace(/([A-Z])/g, ' $1').trim()}</span>: {err.message}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-xs opacity-80 mt-1">Click "Back" to navigate to the previous steps and fix these fields.</p>
                   </div>
                 )}
               </div>

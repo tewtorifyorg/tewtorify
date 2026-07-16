@@ -127,7 +127,7 @@ export default function TutorDashboardPage() {
                   <div>
                     <h3 className="font-semibold text-foreground">Profile Verified ✓</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Your profile is verified. You can now browse tuition requests and appear in AI recommendations.
+                      Your profile is verified. You can now browse tuition requests and guardians can see your profile.
                     </p>
                   </div>
                 </div>
