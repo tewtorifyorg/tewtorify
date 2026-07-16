@@ -39,7 +39,7 @@ export default function GuardianDashboardPage() {
   const actions = [
     { to: '/guardian/post-request', icon: Plus, label: 'Post Tuition Request', desc: 'Create a new request and get AI-matched tutors' },
     { to: '/guardian/post-ad', icon: Megaphone, label: 'Post Public Ad', desc: 'Advertise your tuition need publicly' },
-    { to: '/browse-ads', icon: Search, label: 'Browse Ads', desc: 'See public tuition advertisements' },
+    { to: '/browse-teachers', icon: Search, label: 'Browse Teachers', desc: 'See verified tutor profiles' },
     { to: '/guardian/reviews', icon: Star, label: 'My Reviews', desc: 'Leave reviews for confirmed tutors' },
   ];
 
@@ -51,6 +51,20 @@ export default function GuardianDashboardPage() {
         return <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 text-xs font-medium">Matched</span>;
       case 'closed':
         return <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">Closed</span>;
+      default:
+        return null;
+    }
+  };
+
+  const getAdStatusBadge = (req: TuitionRequest) => {
+    if (!req.isPublicAd) return null;
+    switch (req.adStatus) {
+      case 'pending':
+        return <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 text-xs font-medium">Ad Pending</span>;
+      case 'approved':
+        return <span className="px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 text-xs font-medium">Ad Approved</span>;
+      case 'rejected':
+        return <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 text-xs font-medium">Ad Rejected</span>;
       default:
         return null;
     }
@@ -120,6 +134,7 @@ export default function GuardianDashboardPage() {
                           {CLASS_LEVELS.find((l) => l.value === req.studentClassLevel)?.label || req.studentClassLevel}
                         </span>
                         {getStatusBadge(req.status)}
+                        {getAdStatusBadge(req)}
                         <span className="text-xs text-muted-foreground">{timeAgo(req.createdAt)}</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5 mb-2">

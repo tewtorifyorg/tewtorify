@@ -2,7 +2,7 @@
 // Tewtorify — Login Page (Minimalist B&W)
 // ============================================================
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,12 +21,21 @@ type LoginForm = z.infer<typeof loginSchema>;
 const inputClass = 'w-full h-12 rounded-lg border border-border-subtle bg-surface text-heading text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-dark focus:border-dark transition-all';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, userProfile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (userProfile) {
+      if (userProfile.role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else if (userProfile.role === 'tutor') navigate('/tutor/dashboard', { replace: true });
+      else navigate('/guardian/dashboard', { replace: true });
+    }
+  }, [userProfile, navigate]);
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
@@ -42,8 +51,16 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
-      navigate(from, { replace: true });
+      const profile = await login(data.email, data.password);
+      
+      let redirectPath = from;
+      if (from === '/') {
+        if (profile?.role === 'admin') redirectPath = '/admin/dashboard';
+        else if (profile?.role === 'guardian') redirectPath = '/guardian/dashboard';
+        else if (profile?.role === 'tutor') redirectPath = '/tutor/dashboard';
+      }
+      
+      navigate(redirectPath, { replace: true });
     } catch (err: unknown) {
       const firebaseError = err as { code?: string };
       switch (firebaseError.code) {

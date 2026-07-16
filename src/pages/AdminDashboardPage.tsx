@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Users, UserCheck, ClipboardList, Handshake, Heart,
-  ShieldCheck, ArrowRight, AlertCircle, Loader2, TrendingUp,
+  ShieldCheck, ArrowRight, AlertCircle, Loader2, TrendingUp, Megaphone,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { getPlatformStats } from '@/lib/firestore';
@@ -82,10 +82,18 @@ export default function AdminDashboardPage() {
   const quickLinks = [
     {
       to: '/admin/verifications',
-      label: 'Verification Queue',
+      state: { mode: 'tutors' },
+      label: 'Tutor Verifications',
       icon: ShieldCheck,
       desc: 'Review pending tutor applications',
       badge: stats && stats.pendingTutors > 0 ? stats.pendingTutors : null,
+    },
+    {
+      to: '/admin/ad-verifications',
+      label: 'Ad Verifications',
+      icon: Megaphone,
+      desc: 'Review pending guardian tuition ads',
+      badge: null,
     },
     {
       to: '/admin/matches',
@@ -157,13 +165,14 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {quickLinks.map((link, i) => (
               <motion.div
-                key={link.to}
+                key={link.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.1 }}
               >
                 <Link
                   to={link.to}
+                  state={(link as any).state}
                   className="flex items-center justify-between p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start gap-4">

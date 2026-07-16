@@ -14,6 +14,8 @@ export type TutoringMode = 'in-person' | 'online' | 'both';
 
 export type TuitionRequestStatus = 'open' | 'matched' | 'closed';
 
+export type AdStatus = 'pending' | 'approved' | 'rejected';
+
 export type MatchStatus = 'suggested' | 'contact_requested' | 'confirmed' | 'closed';
 
 export type AdminRole = 'admin' | 'super_admin';
@@ -75,6 +77,8 @@ export interface TuitionRequest {
   status: TuitionRequestStatus;
   createdAt: Timestamp;
   isPublicAd: boolean;
+  adStatus: AdStatus;
+  adRejectionReason?: string;
   contactInfo?: string; // required if isPublicAd is true
 }
 

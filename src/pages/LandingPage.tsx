@@ -7,8 +7,9 @@ import { motion } from 'framer-motion';
 import {
   Shield, Heart, Users, BookOpen,
   ArrowRight, CheckCircle2, UserCheck, ClipboardCheck,
-  Search, BadgeCheck,
+  Search, BadgeCheck, LayoutDashboard,
 } from 'lucide-react';
+import { useAuth } from '@/features/auth/AuthContext';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -40,15 +41,27 @@ const DoodleCircle = () => (
 );
 
 export default function LandingPage() {
+  const { userProfile } = useAuth();
+
+  const getCtaLink = () => {
+    if (!userProfile) return '/signup';
+    switch (userProfile.role) {
+      case 'admin': return '/admin/dashboard';
+      case 'tutor': return '/tutor/dashboard';
+      case 'guardian': return '/guardian/dashboard';
+      default: return '/';
+    }
+  };
+
   return (
     <div className="overflow-hidden bg-canvas selection:bg-dark selection:text-white">
       {/* ============ HERO SECTION ============ */}
       <section className="relative min-h-[90vh] flex items-center justify-center bg-canvas">
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        
+
         <div className="relative mx-auto w-full max-w-[1000px] px-6 py-20 flex flex-col items-center text-center z-10">
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,7 +78,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-[48px] sm:text-[64px] lg:text-[80px] font-extrabold text-heading leading-[1.05] tracking-tight mb-8"
           >
-            Find the perfect <br/>
+            Find the perfect <br />
             <span className="relative inline-block">
               tutor in Pabna.
               <DoodleUnderline />
@@ -81,238 +94,262 @@ export default function LandingPage() {
             No hidden fees. No commissions. Just admin-verified teachers ready to help you succeed.
           </motion.p>
 
+          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row w-full max-w-[400px] sm:max-w-none justify-center items-center gap-4 relative"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <DoodleArrow />
             <Link
               to="/signup"
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-dark text-canvas font-semibold shadow-xl transition-all hover:scale-105 active:scale-95 text-[16px]"
+              className="px-8 py-3.5 rounded-xl bg-white text-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
             >
-              Get Started
+              Get Started Free
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/donate"
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-transparent border-2 border-border-subtle text-dark font-semibold transition-all hover:border-dark text-[16px]"
+              className="px-8 py-3.5 rounded-xl border border-white/20 text-white font-medium hover:bg-white/5 transition-all flex items-center gap-2"
             >
+              <Heart className="h-4 w-4" />
               Support Us
             </Link>
           </motion.div>
-        </div>
-      </section>
 
-      {/* ============ WHY TEWTORIFY ============ */}
-      <section className="py-24 bg-surface border-y border-border-subtle relative overflow-hidden">
-        {/* Decorative corner doodle */}
-        <svg width="200" height="200" viewBox="0 0 100 100" fill="none" className="absolute -top-10 -right-10 text-dark opacity-5" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
+          >
+            {[
+              { value: '100%', label: 'Free' },
+              { value: 'Verified', label: 'Teachers' },
+              { value: 'Manual', label: 'Review' },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-sm text-white/50 mt-1">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+    </div>
+      </section >
+
+    {/* ============ WHY TEWTORIFY ============ */ }
+    < section className = "py-24 bg-surface border-y border-border-subtle relative overflow-hidden" >
+      {/* Decorative corner doodle */ }
+      < svg width = "200" height = "200" viewBox = "0 0 100 100" fill = "none" className = "absolute -top-10 -right-10 text-dark opacity-5" stroke = "currentColor" strokeWidth = "1" strokeLinecap = "round" >
            <path d="M 10 10 L 90 10 L 90 90 L 10 90 Z" transform="rotate(15 50 50)" />
            <path d="M 20 20 L 80 20 L 80 80 L 20 80 Z" transform="rotate(-10 50 50)" />
-        </svg>
+        </svg >
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="text-center max-w-2xl mx-auto mb-20"
+      >
+        <motion.h2
+          variants={fadeUp}
+          custom={0}
+          className="text-[40px] font-bold text-heading tracking-tight"
+        >
+          Why Tewtorify?
+        </motion.h2>
+        <motion.p
+          variants={fadeUp}
+          custom={1}
+          className="mt-4 text-[18px] text-body leading-relaxed"
+        >
+          We believe finding a tutor should be entirely free. No middlemen.
+        </motion.p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            icon: Shield,
+            title: 'Verified Teachers',
+            description: 'Every tutor is manually verified by our team. Certificates and NID are strictly checked.',
+          },
+          {
+            icon: ClipboardCheck,
+            title: 'Strict Matching',
+            description: 'We ensure tutor qualifications perfectly align with the subjects they want to teach.',
+          },
+          {
+            icon: Heart,
+            title: 'Donation-Funded',
+            description: 'The platform runs on community donations. Zero commission, zero registration fees.',
+          },
+        ].map((feature, i) => (
           <motion.div
+            key={feature.title}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-20"
+            variants={fadeUp}
+            custom={i + 2}
+            className="p-8 rounded-[24px] bg-canvas border border-border-subtle hover:border-dark transition-all duration-300 group"
           >
-            <motion.h2
-              variants={fadeUp}
-              custom={0}
-              className="text-[40px] font-bold text-heading tracking-tight"
-            >
-              Why Tewtorify?
-            </motion.h2>
-            <motion.p
-              variants={fadeUp}
-              custom={1}
-              className="mt-4 text-[18px] text-body leading-relaxed"
-            >
-              We believe finding a tutor should be entirely free. No middlemen.
-            </motion.p>
+            <div className="h-14 w-14 rounded-full bg-surface border border-border-subtle flex items-center justify-center mb-6 group-hover:bg-dark group-hover:text-canvas transition-colors text-dark">
+              <feature.icon className="h-6 w-6" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-[20px] font-bold text-heading mb-3">{feature.title}</h3>
+            <p className="text-[15px] text-body leading-relaxed">{feature.description}</p>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Shield,
-                title: 'Verified Teachers',
-                description: 'Every tutor is manually verified by our team. Certificates and NID are strictly checked.',
-              },
-              {
-                icon: ClipboardCheck,
-                title: 'Strict Matching',
-                description: 'We ensure tutor qualifications perfectly align with the subjects they want to teach.',
-              },
-              {
-                icon: Heart,
-                title: 'Donation-Funded',
-                description: 'The platform runs on community donations. Zero commission, zero registration fees.',
-              },
-            ].map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i + 2}
-                className="p-8 rounded-[24px] bg-canvas border border-border-subtle hover:border-dark transition-all duration-300 group"
-              >
-                <div className="h-14 w-14 rounded-full bg-surface border border-border-subtle flex items-center justify-center mb-6 group-hover:bg-dark group-hover:text-canvas transition-colors text-dark">
-                  <feature.icon className="h-6 w-6" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-[20px] font-bold text-heading mb-3">{feature.title}</h3>
-                <p className="text-[15px] text-body leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ HOW IT WORKS ============ */}
-      <section id="how-it-works" className="py-24 bg-canvas">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center max-w-2xl mx-auto mb-20"
-          >
-            <motion.h2
-              variants={fadeUp}
-              custom={0}
-              className="text-[40px] font-bold text-heading tracking-tight"
-            >
-              How it works
-            </motion.h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* Connecting line for desktop */}
-            <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-[1px] bg-border-subtle border-dashed border-t"></div>
-
-            {[
-              {
-                step: '1',
-                icon: Users,
-                title: 'Register',
-                description: 'Create an account as a guardian or a tutor in under a minute.',
-              },
-              {
-                step: '2',
-                icon: UserCheck,
-                title: 'Verify',
-                description: 'Admin team verifies tutor documents for the blue tick.',
-              },
-              {
-                step: '3',
-                icon: Search,
-                title: 'Match',
-                description: 'Get matched and start learning at zero cost.',
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={item.step}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i + 2}
-                className="relative text-center z-10"
-              >
-                <div className="h-24 w-24 rounded-full bg-canvas border-2 border-dark text-dark flex items-center justify-center mx-auto mb-8 relative">
-                  <DoodleCircle />
-                  <span className="text-[32px] font-bold">{item.step}</span>
-                </div>
-                <h3 className="text-[24px] font-bold text-heading mb-4">{item.title}</h3>
-                <p className="text-[16px] text-body leading-relaxed max-w-xs mx-auto">{item.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ FOR TUTORS / FOR GUARDIANS ============ */}
-      <section className="py-24 bg-surface border-t border-border-subtle">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* For Guardians */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-              custom={0}
-              className="p-10 lg:p-14 rounded-[32px] bg-canvas border border-border-subtle flex flex-col items-start"
-            >
-              <div className="h-16 w-16 rounded-full bg-surface border border-border-subtle text-dark flex items-center justify-center mb-8">
-                <Users className="h-8 w-8" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-[32px] font-bold text-heading mb-4">For Guardians</h3>
-              <p className="text-[16px] text-body mb-8 leading-relaxed max-w-md">
-                Find the right tutor without paying middlemen. Post your needs and let admins match you with verified teachers.
-              </p>
-              <ul className="space-y-4 mb-10 mt-auto w-full">
-                {['Post tuition requirements', 'Get verified tutors', 'Browse public ads', 'Leave reviews'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-[15px] font-medium text-heading">
-                    <CheckCircle2 className="h-5 w-5 text-dark shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to="/signup"
-                className="w-full text-center px-6 py-4 rounded-full bg-dark text-canvas font-semibold transition-transform hover:scale-105"
-              >
-                Find a Tutor
-              </Link>
-            </motion.div>
-
-            {/* For Tutors */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-              custom={1}
-              className="p-10 lg:p-14 rounded-[32px] bg-dark text-canvas flex flex-col items-start relative overflow-hidden"
-            >
-              {/* Dark doodle */}
-              <svg width="300" height="300" viewBox="0 0 100 100" fill="none" className="absolute -right-20 -bottom-20 text-canvas opacity-10" stroke="currentColor" strokeWidth="2">
-                <path d="M 10 50 Q 50 10 90 50 T 170 50" />
-                <path d="M 10 60 Q 50 20 90 60 T 170 60" />
-                <path d="M 10 70 Q 50 30 90 70 T 170 70" />
-              </svg>
-
-              <div className="relative z-10 h-16 w-16 rounded-full bg-canvas/10 text-canvas flex items-center justify-center mb-8">
-                <BookOpen className="h-8 w-8" strokeWidth={1.5} />
-              </div>
-              <h3 className="relative z-10 text-[32px] font-bold mb-4 text-canvas">For Tutors</h3>
-              <p className="relative z-10 text-[16px] text-canvas/80 mb-8 leading-relaxed max-w-md">
-                Get verified, build your reputation, and connect with real students. You keep 100% of your earnings.
-              </p>
-              <ul className="relative z-10 space-y-4 mb-10 mt-auto w-full">
-                {['Get verified blue tick', 'Browse open requests', 'Build your rating', 'Zero commissions'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-[15px] font-medium">
-                    <CheckCircle2 className="h-5 w-5 text-canvas shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to="/signup"
-                className="relative z-10 w-full text-center px-6 py-4 rounded-full bg-canvas text-dark font-semibold transition-transform hover:scale-105"
-              >
-                Join as Tutor
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
     </div>
+      </section >
+
+    {/* ============ HOW IT WORKS ============ */ }
+    < section id = "how-it-works" className = "py-24 bg-canvas" >
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-center max-w-2xl mx-auto mb-20"
+        >
+          <motion.h2
+            variants={fadeUp}
+            custom={0}
+            className="text-[40px] font-bold text-heading tracking-tight"
+          >
+            How it works
+          </motion.h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+          {/* Connecting line for desktop */}
+          <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-[1px] bg-border-subtle border-dashed border-t"></div>
+
+          {[
+            {
+              step: '1',
+              icon: Users,
+              title: 'Register',
+              description: 'Create an account as a guardian or a tutor in under a minute.',
+            },
+            {
+              step: '2',
+              icon: UserCheck,
+              title: 'Verify',
+              description: 'Admin team verifies tutor documents for the blue tick.',
+            },
+            {
+              step: '3',
+              icon: Search,
+              title: 'Match',
+              description: 'Get matched and start learning at zero cost.',
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={item.step}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={i + 2}
+              className="relative text-center z-10"
+            >
+              <div className="h-24 w-24 rounded-full bg-canvas border-2 border-dark text-dark flex items-center justify-center mx-auto mb-8 relative">
+                <DoodleCircle />
+                <span className="text-[32px] font-bold">{item.step}</span>
+              </div>
+              <h3 className="text-[24px] font-bold text-heading mb-4">{item.title}</h3>
+              <p className="text-[16px] text-body leading-relaxed max-w-xs mx-auto">{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      </section >
+
+    {/* ============ FOR TUTORS / FOR GUARDIANS ============ */ }
+    < section className = "py-24 bg-surface border-t border-border-subtle" >
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* For Guardians */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+            className="p-10 lg:p-14 rounded-[32px] bg-canvas border border-border-subtle flex flex-col items-start"
+          >
+            <div className="h-16 w-16 rounded-full bg-surface border border-border-subtle text-dark flex items-center justify-center mb-8">
+              <Users className="h-8 w-8" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-[32px] font-bold text-heading mb-4">For Guardians</h3>
+            <p className="text-[16px] text-body mb-8 leading-relaxed max-w-md">
+              Find the right tutor without paying middlemen. Post your needs and let admins match you with verified teachers.
+            </p>
+            <ul className="space-y-4 mb-10 mt-auto w-full">
+              {['Post tuition requirements', 'Get verified tutors', 'Browse public ads', 'Leave reviews'].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-[15px] font-medium text-heading">
+                  <CheckCircle2 className="h-5 w-5 text-dark shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+            >
+              শিক্ষক খুঁজুন
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
+
+          {/* For Tutors */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={1}
+            className="p-10 lg:p-14 rounded-[32px] bg-dark text-canvas flex flex-col items-start relative overflow-hidden"
+          >
+            {/* Dark doodle */}
+            <svg width="300" height="300" viewBox="0 0 100 100" fill="none" className="absolute -right-20 -bottom-20 text-canvas opacity-10" stroke="currentColor" strokeWidth="2">
+              <path d="M 10 50 Q 50 10 90 50 T 170 50" />
+              <path d="M 10 60 Q 50 20 90 60 T 170 60" />
+              <path d="M 10 70 Q 50 30 90 70 T 170 70" />
+            </svg>
+
+            <div className="relative z-10 h-16 w-16 rounded-full bg-canvas/10 text-canvas flex items-center justify-center mb-8">
+              <BookOpen className="h-8 w-8" strokeWidth={1.5} />
+            </div>
+            <h3 className="relative z-10 text-[32px] font-bold mb-4 text-canvas">For Tutors</h3>
+            <p className="relative z-10 text-[16px] text-canvas/80 mb-8 leading-relaxed max-w-md">
+              Get verified, build your reputation, and connect with real students. You keep 100% of your earnings.
+            </p>
+            <ul className="relative z-10 space-y-4 mb-10 mt-auto w-full">
+              {['Get verified blue tick', 'Browse open requests', 'Build your rating', 'Zero commissions'].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-[15px] font-medium">
+                  <CheckCircle2 className="h-5 w-5 text-canvas shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-accent text-accent-foreground text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+            >
+              শিক্ষক হিসেবে যোগ দিন
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+      </section >
+    </div >
   );
 }

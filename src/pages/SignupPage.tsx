@@ -2,7 +2,7 @@
 // Tewtorify — Signup Page (Minimalist B&W)
 // ============================================================
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,13 +31,22 @@ type SignupForm = z.infer<typeof signupSchema>;
 const inputClass = 'w-full h-12 rounded-lg border border-border-subtle bg-surface text-heading text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-dark focus:border-dark transition-all';
 
 export default function SignupPage() {
-  const { signup } = useAuth();
+  const { signup, userProfile } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (userProfile) {
+      if (userProfile.role === 'admin') navigate('/admin/dashboard', { replace: true });
+      else if (userProfile.role === 'tutor') navigate('/tutor/dashboard', { replace: true });
+      else navigate('/guardian/dashboard', { replace: true });
+    }
+  }, [userProfile, navigate]);
 
   const {
     register,

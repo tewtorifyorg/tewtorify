@@ -70,7 +70,8 @@ export default function Header() {
 
   const publicLinks = [
     { to: '/', label: 'Home' },
-    { to: '/browse-ads', label: 'Tuition Ads' },
+    ...(userProfile?.role !== 'guardian' ? [{ to: '/browse-ads', label: 'Tuition Ads' }] : []),
+    { to: '/browse-teachers', label: 'Teachers' },
     { to: '/donate', label: 'Donate' },
   ];
 

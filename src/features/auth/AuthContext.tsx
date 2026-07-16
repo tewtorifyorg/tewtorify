@@ -31,7 +31,7 @@ interface AuthContextType {
   user: FirebaseUser | null;
   userProfile: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User | undefined>;
   signup: (
     email: string,
     password: string,
@@ -80,13 +80,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Login
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User | undefined> => {
     const credential = await signInWithEmailAndPassword(auth, email, password);
     // Profile will be fetched by onAuthStateChanged
     const userDoc = await getDoc(doc(db, 'users', credential.user.uid));
     if (userDoc.exists()) {
-      setUserProfile({ uid: credential.user.uid, ...userDoc.data() } as User);
+      const profile = { uid: credential.user.uid, ...userDoc.data() } as User;
+      setUserProfile(profile);
+      return profile;
     }
+    return undefined;
   };
 
   // Signup

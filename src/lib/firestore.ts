@@ -28,6 +28,7 @@ import type {
   Donation,
   AdminRecord,
   VerificationStatus,
+  AdStatus,
   PlatformStats,
   User,
 } from '@/types';
@@ -55,11 +56,11 @@ export async function getTutorProfilesByStatus(
 ): Promise<TutorProfile[]> {
   const q = query(
     tutorProfilesRef,
-    where('verificationStatus', '==', status),
     orderBy('createdAt', 'desc')
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ uid: d.id, ...d.data() }) as TutorProfile);
+  const allProfiles = snap.docs.map((d) => ({ uid: d.id, ...d.data() }) as TutorProfile);
+  return allProfiles.filter((p) => p.verificationStatus === status);
 }
 
 export async function getAllTutorProfiles(): Promise<TutorProfile[]> {
@@ -145,11 +146,17 @@ export async function getGuardianRequests(
 ): Promise<TuitionRequest[]> {
   const q = query(
     tuitionRequestsRef,
-    where('guardianUid', '==', guardianUid),
-    orderBy('createdAt', 'desc')
+    where('guardianUid', '==', guardianUid)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  const requests = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  
+  // Sort locally to avoid Firestore composite index requirement
+  return requests.sort((a, b) => {
+    const aTime = a.createdAt?.toMillis() || 0;
+    const bTime = b.createdAt?.toMillis() || 0;
+    return bTime - aTime;
+  });
 }
 
 export async function updateTuitionRequest(
@@ -157,6 +164,72 @@ export async function updateTuitionRequest(
   data: Partial<TuitionRequest>
 ): Promise<void> {
   await updateDoc(doc(db, 'tuitionRequests', id), data);
+}
+
+// Get only public ads that have been approved by admin
+export async function getApprovedPublicAds(): Promise<TuitionRequest[]> {
+  // To avoid requiring complex composite indexes in Firestore, we only sort by 'createdAt' 
+  // (which is single-field indexed) and filter the rest locally.
+  const q = query(
+    tuitionRequestsRef,
+    orderBy('createdAt', 'desc')
+  );
+  const snap = await getDocs(q);
+  const allRequests = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  
+  // Filter for open, approved public ads
+  return allRequests.filter(
+    (req) => req.status === 'open' && req.isPublicAd === true && req.adStatus === 'approved'
+  );
+}
+
+// Get pending public ads (for admin verification)
+export async function getPendingAds(): Promise<TuitionRequest[]> {
+  const q = query(
+    tuitionRequestsRef,
+    orderBy('createdAt', 'desc')
+  );
+  const snap = await getDocs(q);
+  const allRequests = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  
+  return allRequests.filter(
+    (req) => req.isPublicAd === true && (req.adStatus || 'pending') === 'pending'
+  );
+}
+
+// Admin approve/reject an ad
+export async function updateAdStatus(
+  id: string,
+  status: AdStatus,
+  adminUid: string,
+  rejectionReason?: string
+): Promise<void> {
+  const updateData: DocumentData = {
+    adStatus: status,
+  };
+  if (status === 'rejected' && rejectionReason) {
+    updateData.adRejectionReason = rejectionReason;
+  }
+  await updateDoc(doc(db, 'tuitionRequests', id), updateData);
+}
+
+// Get verified tutor profiles with user info (for public Teachers page)
+export async function getVerifiedTutorProfilesWithUser(): Promise<
+  (TutorProfile & { userName: string; userEmail: string; userPhone: string })[]
+> {
+  const profiles = await getTutorProfilesByStatus('verified');
+  const tutorsWithUser = await Promise.all(
+    profiles.map(async (profile) => {
+      const userData = await getUserProfile(profile.uid);
+      return {
+        ...profile,
+        userName: userData?.name || 'Unknown',
+        userEmail: userData?.email || 'N/A',
+        userPhone: userData?.phone || 'N/A',
+      };
+    })
+  );
+  return tutorsWithUser;
 }
 
 // ---------- Matches ----------
