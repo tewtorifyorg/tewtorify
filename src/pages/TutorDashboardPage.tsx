@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { getTutorProfile } from '@/lib/firestore';
 import { QUALIFICATION_LEVELS, CLASS_LEVELS } from '@/lib/constants';
 import type { TutorProfile, VerificationStatus } from '@/types';
+import { FeatureCard } from '@/components/FeatureCard';
 
 export default function TutorDashboardPage() {
   const { user, userProfile } = useAuth();
@@ -197,33 +198,19 @@ export default function TutorDashboardPage() {
 
         {/* Verified Actions */}
         {verificationStatus === 'verified' && (
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-              <Link to="/tutor/browse-requests" className="block p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all group">
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Search className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">Browse Requests</h3>
-                    <p className="text-xs text-muted-foreground mt-1">Find open tuition requests matching your subjects</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <Link to="/tutor/profile" className="block p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all group">
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">My Profile & Reviews</h3>
-                    <p className="text-xs text-muted-foreground mt-1">View your ratings and manage your profile</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+          <div className="mt-8 flex flex-wrap gap-[20px] *:w-full sm:*:w-[calc(50%-10px)]">
+            <FeatureCard
+              to="/tutor/browse-requests"
+              title="Browse Requests"
+              description="Find open tuition requests matching your subjects"
+              icon={Search}
+            />
+            <FeatureCard
+              to="/tutor/profile"
+              title="My Profile & Reviews"
+              description="View your ratings and manage your profile"
+              icon={Star}
+            />
           </div>
         )}
       </div>

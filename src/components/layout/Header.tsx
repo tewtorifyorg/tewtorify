@@ -16,29 +16,38 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Detect scroll for header shadow
+  // Detect scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Dark mode toggle
+  // Dark mode — init from localStorage or system preference
   useEffect(() => {
     const saved = localStorage.getItem('tewtorify-theme');
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefersDark)) {
       setDarkMode(true);
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
-    localStorage.setItem('tewtorify-theme', !darkMode ? 'dark' : 'light');
+    const next = !darkMode;
+    setDarkMode(next);
+    if (next) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('tewtorify-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('tewtorify-theme', 'light');
+    }
   };
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileOpen(false);
     setProfileOpen(false);
@@ -70,18 +79,19 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-background/95 backdrop-blur-sm border-b border-border shadow-sm'
-          : 'bg-background/80 backdrop-blur-sm'
+          ? 'bg-canvas/95 backdrop-blur-md border-b border-border-subtle shadow-[var(--shadow-soft)]'
+          : 'bg-canvas/80 backdrop-blur-md'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary text-white shadow-sm transition-transform group-hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-dark text-canvas shadow-sm transition-transform group-hover:scale-105">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">
+            <span className="text-xl font-bold tracking-tight text-heading">
               Tewtorify
             </span>
           </Link>
@@ -94,8 +104,8 @@ export default function Header() {
                 to={link.to}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   location.pathname === link.to
-                    ? 'text-primary bg-primary/8'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'text-dark bg-dark/8 font-semibold'
+                    : 'text-muted hover:text-heading hover:bg-surface'
                 }`}
               >
                 {link.label}
@@ -108,7 +118,7 @@ export default function Header() {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="p-2 rounded-lg text-muted hover:text-heading hover:bg-surface transition-colors"
               aria-label="Toggle dark mode"
             >
               {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -119,13 +129,13 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-muted transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-surface transition-colors"
                 >
-                  <div className="h-7 w-7 rounded-full gradient-primary flex items-center justify-center text-xs text-white font-semibold">
+                  <div className="h-7 w-7 rounded-full bg-dark text-canvas flex items-center justify-center text-xs font-bold">
                     {userProfile?.name?.[0]?.toUpperCase() || 'U'}
                   </div>
-                  <span className="text-foreground">{userProfile?.name || 'User'}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
+                  <span className="text-heading">{userProfile?.name || 'User'}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 text-muted transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -135,21 +145,21 @@ export default function Header() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -8, scale: 0.95 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-48 rounded-xl bg-card border border-border shadow-xl p-1.5"
+                      className="absolute right-0 mt-2 w-48 rounded-xl bg-canvas border border-border-subtle shadow-[var(--shadow-card-hover)] p-1.5"
                     >
-                      <div className="px-3 py-2 border-b border-border mb-1">
-                        <p className="text-xs text-muted-foreground capitalize">{userProfile?.role}</p>
+                      <div className="px-3 py-2 border-b border-border-subtle mb-1">
+                        <p className="text-xs text-muted capitalize">{userProfile?.role}</p>
                       </div>
                       <Link
                         to={getDashboardLink()}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-heading hover:bg-surface transition-colors"
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         Dashboard
                       </Link>
                       <Link
                         to={userProfile?.role === 'tutor' ? '/tutor/profile' : '#'}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-heading hover:bg-surface transition-colors"
                       >
                         <User className="h-4 w-4" />
                         Profile
@@ -170,13 +180,13 @@ export default function Header() {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-heading hover:bg-surface transition-colors"
                 >
                   Log In
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-lg text-sm font-semibold gradient-primary text-white shadow-sm hover:shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold bg-dark text-canvas shadow-sm hover:shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Sign Up
                 </Link>
@@ -187,7 +197,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="md:hidden p-2 rounded-lg text-muted hover:text-heading hover:bg-surface transition-colors"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -203,7 +213,7 @@ export default function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-card border-b border-border"
+            className="md:hidden overflow-hidden bg-canvas border-b border-border-subtle"
           >
             <nav className="px-4 py-3 flex flex-col gap-1">
               {publicLinks.map((link) => (
@@ -212,20 +222,20 @@ export default function Header() {
                   to={link.to}
                   className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === link.to
-                      ? 'text-primary bg-primary/8'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      ? 'text-dark bg-surface font-semibold'
+                      : 'text-muted hover:text-heading hover:bg-surface'
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
 
-              <div className="border-t border-border my-2" />
+              <div className="border-t border-border-subtle my-2" />
 
               {/* Dark Mode */}
               <button
                 onClick={toggleDarkMode}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-muted hover:text-heading hover:bg-surface transition-colors"
               >
                 {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 {darkMode ? 'Light Mode' : 'Dark Mode'}
@@ -235,7 +245,7 @@ export default function Header() {
                 <>
                   <Link
                     to={getDashboardLink()}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-heading hover:bg-surface transition-colors"
                   >
                     <LayoutDashboard className="h-4 w-4" />
                     Dashboard
@@ -252,13 +262,13 @@ export default function Header() {
                 <div className="flex gap-2 px-4 py-2">
                   <Link
                     to="/login"
-                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium text-center border border-border hover:bg-muted transition-colors"
+                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium text-center border border-border-subtle text-heading hover:bg-surface transition-colors"
                   >
                     Log In
                   </Link>
                   <Link
                     to="/signup"
-                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-center gradient-primary text-white shadow-sm"
+                    className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-center bg-dark text-canvas"
                   >
                     Sign Up
                   </Link>

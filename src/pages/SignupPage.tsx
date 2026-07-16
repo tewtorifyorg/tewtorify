@@ -1,5 +1,5 @@
 // ============================================================
-// Tewtorify — Signup Page
+// Tewtorify — Signup Page (Minimalist B&W)
 // ============================================================
 
 import { useState, useEffect } from 'react';
@@ -28,10 +28,12 @@ const signupSchema = z.object({
 
 type SignupForm = z.infer<typeof signupSchema>;
 
+const inputClass = 'w-full h-12 rounded-lg border border-border-subtle bg-surface text-heading text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-dark focus:border-dark transition-all';
+
 export default function SignupPage() {
   const { signup, userProfile } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState<1 | 2>(1); // 1 = role selection, 2 = form
+  const [step, setStep] = useState<1 | 2>(1);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -60,7 +62,6 @@ export default function SignupPage() {
     setIsLoading(true);
     try {
       await signup(data.email, data.password, data.name, data.phone, selectedRole);
-      // Redirect based on role
       if (selectedRole === 'tutor') {
         navigate('/tutor/apply');
       } else {
@@ -105,40 +106,48 @@ export default function SignupPage() {
   ];
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel — Branding (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 gradient-hero items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute bottom-1/3 -right-20 w-60 h-60 rounded-full bg-accent/8 blur-3xl" />
-        </div>
+    <div className="min-h-screen flex bg-canvas">
+      {/* Left Panel — Branding (desktop only) */}
+      <div className="hidden lg:flex lg:w-[45%] bg-dark flex-col justify-center p-16 relative overflow-hidden">
+        {/* Doodle decoration */}
+        <svg width="320" height="320" viewBox="0 0 100 100" fill="none" className="absolute -right-16 -bottom-16 text-canvas opacity-5" stroke="currentColor" strokeWidth="1">
+          <path d="M 0 50 Q 25 25 50 50 T 100 50" />
+          <path d="M 0 62 Q 25 37 50 62 T 100 62" />
+          <path d="M 0 74 Q 25 49 50 74 T 100 74" />
+          <path d="M 0 86 Q 25 61 50 86 T 100 86" />
+        </svg>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative text-center text-white max-w-md"
+          className="relative z-10 max-w-sm"
         >
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-lg">
-              <GraduationCap className="h-8 w-8" />
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-16">
+            <div className="h-10 w-10 rounded-lg bg-canvas/10 flex items-center justify-center">
+              <GraduationCap className="h-6 w-6 text-canvas" />
             </div>
+            <span className="text-xl font-bold text-canvas">Tewtorify</span>
           </div>
-          <h1 className="text-3xl font-bold mb-4">Tewtorify তে যোগ দিন</h1>
-          <p className="text-base text-white/65 leading-relaxed">
-            সম্পূর্ণ বিনামূল্যে, community-driven platform। পাবনার 
-            verified শিক্ষকদের সাথে connect হন। কোনো ফি নেই, কোনো commission নেই।
+
+          <h1 className="text-[42px] font-bold text-canvas leading-tight tracking-tight mb-6">
+            Tewtorify তে<br />যোগ দিন
+          </h1>
+          <p className="text-[17px] text-canvas/70 leading-relaxed mb-12">
+            সম্পূর্ণ বিনামূল্যে, community-driven platform। পাবনার verified শিক্ষকদের সাথে connect হন।
           </p>
 
-          {/* Trust badges */}
-          <div className="mt-10 flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {[
               'প্রতিটি শিক্ষক manually verified',
               'Admin-approved matching',
               'সম্পূর্ণ বিনামূল্যে',
             ].map((badge) => (
-              <div key={badge} className="flex items-center gap-2 text-sm text-white/80">
-                <CheckCircle2 className="h-4 w-4 text-amber-300" />
+              <div key={badge} className="flex items-center gap-3 text-[15px] text-canvas/90 font-medium">
+                <div className="h-6 w-6 rounded-full border border-canvas/30 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="h-4 w-4 text-canvas" />
+                </div>
                 {badge}
               </div>
             ))}
@@ -146,20 +155,21 @@ export default function SignupPage() {
         </motion.div>
       </div>
 
-      {/* Right Panel */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+      {/* Right Panel — Form */}
+      <div className="w-full lg:w-[55%] flex items-center justify-center p-6 sm:p-12 bg-canvas overflow-y-auto">
         <div className="w-full max-w-md">
+
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="h-10 w-10 rounded-xl gradient-primary flex items-center justify-center text-white shadow-md">
+          <div className="lg:hidden flex items-center gap-2 mb-10">
+            <div className="h-9 w-9 rounded-lg bg-dark flex items-center justify-center text-canvas shadow-sm">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold">Tewtorify</span>
+            <span className="text-xl font-bold text-heading">Tewtorify</span>
           </div>
 
           <AnimatePresence mode="wait">
             {step === 1 ? (
-              /* ---- Step 1: Role Selection ---- */
+              /* Step 1: Role Selection */
               <motion.div
                 key="step1"
                 initial={{ opacity: 0, x: -20 }}
@@ -167,8 +177,8 @@ export default function SignupPage() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                <h2 className="text-2xl font-bold text-foreground mb-1">Sign Up</h2>
-                <p className="text-sm text-muted-foreground mb-8">
+                <h2 className="text-[32px] font-bold text-heading mb-2 tracking-tight">Sign Up</h2>
+                <p className="text-[16px] text-muted mb-10">
                   Choose how you'd like to use Tewtorify
                 </p>
 
@@ -180,26 +190,35 @@ export default function SignupPage() {
                       <button
                         key={role.value}
                         onClick={() => setSelectedRole(role.value)}
-                        className={`w-full text-left p-5 rounded-xl border-2 transition-all duration-200 ${
+                        className={`w-full text-left p-6 rounded-[16px] border-2 transition-all duration-200 ${
                           isSelected
-                            ? 'border-primary bg-primary/5 shadow-md'
-                            : 'border-border hover:border-primary/30 hover:bg-muted/50'
+                            ? 'border-dark bg-dark text-canvas shadow-lg scale-[1.01]'
+                            : 'border-border-subtle bg-surface text-heading hover:border-dark hover:bg-canvas'
                         }`}
                       >
                         <div className="flex items-start gap-4">
-                          <div className={`h-11 w-11 rounded-lg flex items-center justify-center shrink-0 ${
-                            isSelected ? 'gradient-primary text-white' : 'bg-muted text-muted-foreground'
+                          <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${
+                            isSelected ? 'bg-canvas/15' : 'bg-canvas border border-border-subtle'
                           }`}>
-                            <Icon className="h-5 w-5" />
+                            <Icon className={`h-6 w-6 ${isSelected ? 'text-canvas' : 'text-dark'}`} strokeWidth={1.5} />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">{role.title}</h3>
-                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                            <h3 className={`font-bold text-[17px] mb-1 ${isSelected ? 'text-canvas' : 'text-heading'}`}>
+                              {role.title}
+                            </h3>
+                            <p className={`text-sm leading-relaxed mb-3 ${isSelected ? 'text-canvas/80' : 'text-muted'}`}>
                               {role.description}
                             </p>
-                            <div className="mt-3 flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2">
                               {role.features.map((f) => (
-                                <span key={f} className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                                <span
+                                  key={f}
+                                  className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                    isSelected
+                                      ? 'bg-canvas/15 text-canvas'
+                                      : 'bg-surface border border-border-subtle text-muted'
+                                  }`}
+                                >
                                   {f}
                                 </span>
                               ))}
@@ -214,21 +233,21 @@ export default function SignupPage() {
                 <button
                   onClick={() => selectedRole && setStep(2)}
                   disabled={!selectedRole}
-                  className="w-full h-11 mt-6 rounded-lg gradient-primary text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="w-full h-14 mt-8 rounded-full bg-dark text-canvas font-semibold text-[16px] shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   Continue
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-5 w-5" />
                 </button>
 
-                <p className="mt-8 text-center text-sm text-muted-foreground">
+                <p className="mt-8 text-center text-[15px] text-muted">
                   Already have an account?{' '}
-                  <Link to="/login" className="font-semibold text-primary hover:underline">
+                  <Link to="/login" className="font-semibold text-dark hover:underline">
                     Log In
                   </Link>
                 </p>
               </motion.div>
             ) : (
-              /* ---- Step 2: Registration Form ---- */
+              /* Step 2: Registration Form */
               <motion.div
                 key="step2"
                 initial={{ opacity: 0, x: 20 }}
@@ -238,137 +257,137 @@ export default function SignupPage() {
               >
                 <button
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+                  className="flex items-center gap-2 text-[14px] text-muted hover:text-heading transition-colors mb-8 font-medium"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back
                 </button>
 
-                <h2 className="text-2xl font-bold text-foreground mb-1">
-                  Create your account
+                <h2 className="text-[32px] font-bold text-heading mb-2 tracking-tight">
+                  Create account
                 </h2>
-                <p className="text-sm text-muted-foreground mb-8">
+                <p className="text-[16px] text-muted mb-10">
                   Signing up as{' '}
-                  <span className="font-medium text-primary capitalize">{selectedRole}</span>
+                  <span className="font-semibold text-dark capitalize">{selectedRole}</span>
                 </p>
 
                 {error && (
                   <motion.div
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm"
+                    className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-red-50 text-red-600 text-sm font-medium border border-red-100"
                   >
-                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <AlertCircle className="h-5 w-5 shrink-0" />
                     {error}
                   </motion.div>
                 )}
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   {/* Name */}
                   <div>
-                    <label htmlFor="signup-name" className="block text-sm font-medium text-foreground mb-1.5">
+                    <label htmlFor="signup-name" className="block text-label text-heading mb-2">
                       Full Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                       <input
                         id="signup-name"
                         type="text"
                         placeholder="Your full name"
-                        className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        className={`${inputClass} pl-11 pr-4`}
                         {...register('name')}
                       />
                     </div>
                     {errors.name && (
-                      <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>
+                      <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.name.message}</p>
                     )}
                   </div>
 
                   {/* Email */}
                   <div>
-                    <label htmlFor="signup-email" className="block text-sm font-medium text-foreground mb-1.5">
+                    <label htmlFor="signup-email" className="block text-label text-heading mb-2">
                       Email
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                       <input
                         id="signup-email"
                         type="email"
                         placeholder="you@example.com"
-                        className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        className={`${inputClass} pl-11 pr-4`}
                         {...register('email')}
                       />
                     </div>
                     {errors.email && (
-                      <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
+                      <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.email.message}</p>
                     )}
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label htmlFor="signup-phone" className="block text-sm font-medium text-foreground mb-1.5">
+                    <label htmlFor="signup-phone" className="block text-label text-heading mb-2">
                       Phone Number
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                       <input
                         id="signup-phone"
                         type="tel"
                         placeholder="01XXXXXXXXX"
-                        className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        className={`${inputClass} pl-11 pr-4`}
                         {...register('phone')}
                       />
                     </div>
                     {errors.phone && (
-                      <p className="mt-1 text-xs text-destructive">{errors.phone.message}</p>
+                      <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.phone.message}</p>
                     )}
                   </div>
 
                   {/* Password */}
                   <div>
-                    <label htmlFor="signup-password" className="block text-sm font-medium text-foreground mb-1.5">
+                    <label htmlFor="signup-password" className="block text-label text-heading mb-2">
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                       <input
                         id="signup-password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder="At least 6 characters"
-                        className="w-full h-11 pl-10 pr-11 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        className={`${inputClass} pl-11 pr-12`}
                         {...register('password')}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-heading transition-colors"
                         aria-label={showPassword ? 'Hide password' : 'Show password'}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
                     {errors.password && (
-                      <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>
+                      <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password.message}</p>
                     )}
                   </div>
 
                   {/* Confirm Password */}
                   <div>
-                    <label htmlFor="signup-confirm-password" className="block text-sm font-medium text-foreground mb-1.5">
+                    <label htmlFor="signup-confirm-password" className="block text-label text-heading mb-2">
                       Confirm Password
                     </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                       <input
                         id="signup-confirm-password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Confirm your password"
-                        className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                        className={`${inputClass} pl-11 pr-4`}
                         {...register('confirmPassword')}
                       />
                     </div>
                     {errors.confirmPassword && (
-                      <p className="mt-1 text-xs text-destructive">{errors.confirmPassword.message}</p>
+                      <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.confirmPassword.message}</p>
                     )}
                   </div>
 
@@ -376,11 +395,11 @@ export default function SignupPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-11 rounded-lg gradient-primary text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="w-full h-14 rounded-full bg-dark text-canvas font-semibold text-[16px] shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
                     {isLoading ? (
                       <span className="flex items-center justify-center gap-2">
-                        <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <div className="h-5 w-5 rounded-full border-2 border-canvas border-t-transparent animate-spin" />
                         Creating account...
                       </span>
                     ) : (
@@ -389,9 +408,9 @@ export default function SignupPage() {
                   </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm text-muted-foreground">
+                <p className="mt-8 text-center text-[15px] text-muted">
                   Already have an account?{' '}
-                  <Link to="/login" className="font-semibold text-primary hover:underline">
+                  <Link to="/login" className="font-semibold text-dark hover:underline">
                     Log In
                   </Link>
                 </p>

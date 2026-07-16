@@ -14,6 +14,7 @@ import { getGuardianRequests } from '@/lib/firestore';
 import { CLASS_LEVELS } from '@/lib/constants';
 import { formatBDT, timeAgo } from '@/lib/utils';
 import type { TuitionRequest } from '@/types';
+import { FeatureCard } from '@/components/FeatureCard';
 
 export default function GuardianDashboardPage() {
   const { user, userProfile } = useAuth();
@@ -82,29 +83,15 @@ export default function GuardianDashboardPage() {
         </motion.div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {actions.map((action, i) => (
-            <motion.div
+        <div className="mt-8 flex flex-wrap gap-[20px] *:w-full sm:*:w-[calc(50%-10px)]">
+          {actions.map((action) => (
+            <FeatureCard
               key={action.to}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Link
-                to={action.to}
-                className="block p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all group"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <action.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{action.label}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{action.desc}</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+              to={action.to}
+              title={action.label}
+              description={action.desc}
+              icon={action.icon}
+            />
           ))}
         </div>
 
@@ -124,7 +111,7 @@ export default function GuardianDashboardPage() {
               <p className="text-muted-foreground">No tuition requests yet.</p>
               <Link
                 to="/guardian/post-request"
-                className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-lg gradient-primary text-white text-sm font-semibold"
+                className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-full bg-dark text-canvas text-sm font-semibold hover:scale-105 transition-transform"
               >
                 <Plus className="h-4 w-4" />
                 Post Your First Request
@@ -143,7 +130,7 @@ export default function GuardianDashboardPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-semibold">
+                        <span className="px-2.5 py-0.5 rounded-full bg-dark text-canvas text-xs font-semibold">
                           {CLASS_LEVELS.find((l) => l.value === req.studentClassLevel)?.label || req.studentClassLevel}
                         </span>
                         {getStatusBadge(req.status)}
@@ -171,7 +158,7 @@ export default function GuardianDashboardPage() {
                     {req.status === 'matched' && (
                       <Link
                         to={`/guardian/matches/${req.id}`}
-                        className="shrink-0 px-3 py-1.5 rounded-lg gradient-primary text-white text-xs font-semibold"
+                        className="shrink-0 px-4 py-2 rounded-full bg-dark text-canvas text-xs font-semibold hover:scale-105 transition-transform"
                       >
                         View Matches
                       </Link>
