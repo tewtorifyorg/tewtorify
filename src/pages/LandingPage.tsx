@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import {
   GraduationCap, Shield, Heart, Users, BookOpen,
   ArrowRight, CheckCircle2, UserCheck, ClipboardCheck,
-  Search, BadgeCheck, LayoutDashboard,
+  Search, BadgeCheck, LayoutDashboard, HelpCircle,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 
@@ -364,6 +364,155 @@ export default function LandingPage() {
               </Link>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* ============ HOW IT WORKS ============ */}
+      <section className="py-20 bg-background border-t border-border/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center max-w-2xl mx-auto mb-16"
+          >
+            <motion.h2
+              variants={fadeUp}
+              custom={0}
+              className="text-3xl font-bold text-foreground"
+            >
+              কিভাবে কাজ করে?
+            </motion.h2>
+            <motion.p
+              variants={fadeUp}
+              custom={1}
+              className="mt-4 text-muted-foreground"
+            >
+              Tewtorify এর মাধ্যমে খুব সহজেই শিক্ষক ও শিক্ষার্থীরা যুক্ত হতে পারেন।
+            </motion.p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {/* Guardian Flow */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={2}
+              className="relative"
+            >
+              <div className="absolute top-8 bottom-8 left-[1.15rem] w-px bg-border"></div>
+              <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+                <Users className="h-6 w-6 text-primary" />
+                অভিভাবকদের জন্য
+              </h3>
+              <div className="space-y-6">
+                {[
+                  { title: 'Post a Request', desc: 'আপনার কী ধরনের শিক্ষক প্রয়োজন তা জানিয়ে একটি request পোস্ট করুন।' },
+                  { title: 'Wait for Approvals', desc: 'আমাদের টিম আপনার পোস্টটি যাচাই করে approve করবে।' },
+                  { title: 'Match & Connect', desc: 'verified শিক্ষকরা আপনার পোস্টে apply করবেন, আপনি পছন্দমতো বেছে নিন।' }
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-4 relative">
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-card border border-primary/20 flex items-center justify-center text-primary font-bold text-sm relative z-10 shadow-sm">
+                      {i + 1}
+                    </div>
+                    <div className="pt-2">
+                      <h4 className="font-semibold text-foreground text-sm">{step.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Tutor Flow */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={3}
+              className="relative"
+            >
+              <div className="absolute top-8 bottom-8 left-[1.15rem] w-px bg-border"></div>
+              <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+                <GraduationCap className="h-6 w-6 text-accent" />
+                শিক্ষকদের জন্য
+              </h3>
+              <div className="space-y-6">
+                {[
+                  { title: 'Create Profile', desc: 'নিজের যোগ্যতা ও অভিজ্ঞতা দিয়ে প্রোফাইল তৈরি করুন।' },
+                  { title: 'Get Verified', desc: 'অ্যাডমিন প্যানেল থেকে আপনার তথ্য যাচাই করে verified ব্যাজ দেওয়া হবে।' },
+                  { title: 'Apply to Jobs', desc: 'Open tuition request গুলোতে apply করুন এবং সরাসরি অভিভাবকের সাথে কথা বলুন।' }
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-4 relative">
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-card border border-accent/20 flex items-center justify-center text-accent font-bold text-sm relative z-10 shadow-sm">
+                      {i + 1}
+                    </div>
+                    <div className="pt-2">
+                      <h4 className="font-semibold text-foreground text-sm">{step.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ FAQ SECTION ============ */}
+      <section className="py-20 bg-muted/30 border-t border-border/50">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <motion.h2
+              variants={fadeUp}
+              custom={0}
+              className="text-3xl font-bold text-foreground flex justify-center items-center gap-3"
+            >
+              <HelpCircle className="h-8 w-8 text-primary" />
+              সচরাচর জিজ্ঞাসিত প্রশ্ন (FAQ)
+            </motion.h2>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={1}
+            className="space-y-4"
+          >
+            {[
+              {
+                q: 'Tewtorify কি আসলেই সম্পূর্ণ ফ্রি?',
+                a: 'হ্যাঁ! শিক্ষক বা অভিভাবক কারো থেকেই আমরা কোনো কমিশন বা ফি নিই না। এই প্ল্যাটফর্মটি সম্পূর্ণ community donation এর মাধ্যমে চলে।'
+              },
+              {
+                q: 'শিক্ষকদের Verification কিভাবে হয়?',
+                a: 'শিক্ষকরা রেজিস্ট্রেশন করার পর তাদের NID, Student ID এবং অন্যান্য তথ্য আমাদের অ্যাডমিন প্যানেল manually যাচাই করে। এরপরই তাদের Verified ব্যাজ দেওয়া হয়।'
+              },
+              {
+                q: 'আমি কি সরাসরি শিক্ষকের সাথে যোগাযোগ করতে পারব?',
+                a: 'হ্যাঁ। যখন কোনো শিক্ষক আপনার টিউশন পোস্টে apply করবেন, আপনি তার প্রোফাইল দেখে সরাসরি তার দেওয়া ফোন নাম্বারে যোগাযোগ করতে পারবেন।'
+              },
+              {
+                q: 'অ্যাকাউন্ট খুলতে কি টাকা লাগে?',
+                a: 'না। অ্যাকাউন্ট খোলা থেকে শুরু করে টিউটর খোঁজা বা টিউশনে অ্যাপ্লাই করা—সবকিছুই একদম ফ্রি।'
+              }
+            ].map((faq, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-card border border-border">
+                <h4 className="text-lg font-bold text-foreground mb-2">{faq.q}</h4>
+                <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
