@@ -112,6 +112,7 @@ export default function GuardianPostRequestPage() {
         timingPreference: data.timingPreference,
         status: 'open',
         isPublicAd: data.isPublicAd,
+        adStatus: data.isPublicAd ? 'pending' : 'approved',
         contactInfo: data.isPublicAd ? data.contactInfo : undefined,
       });
       setSuccess(true);
@@ -140,6 +141,11 @@ export default function GuardianPostRequestPage() {
             Your tuition request has been posted. Our system will match you with verified
             tutors who fit your requirements. You'll be able to see matches in your dashboard.
           </p>
+          {watchedIsPublicAd && (
+            <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm text-amber-700 dark:text-amber-400">
+              <strong>Note:</strong> Your public ad is pending admin approval. It will be visible in Tuition Ads once approved.
+            </div>
+          )}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
             <Link
               to="/guardian/dashboard"

@@ -20,10 +20,12 @@ import TutorProfilePage from '@/pages/TutorProfilePage';
 import TutorBrowseRequestsPage from '@/pages/TutorBrowseRequestsPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
 import AdminVerificationsPage from '@/pages/AdminVerificationsPage';
+import AdminAdVerificationsPage from '@/pages/AdminAdVerificationsPage';
 import AdminMatchesPage from '@/pages/AdminMatchesPage';
 import AdminDonationsPage from '@/pages/AdminDonationsPage';
 import AdminAdminsPage from '@/pages/AdminAdminsPage';
 import BrowseAdsPage from '@/pages/BrowseAdsPage';
+import BrowseTeachersPage from '@/pages/BrowseTeachersPage';
 import DonatePage from '@/pages/DonatePage';
 
 // Remaining placeholder pages (will be implemented later)
@@ -71,6 +73,7 @@ export default function App() {
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/browse-ads" element={<BrowseAdsPage />} />
+            <Route path="/browse-teachers" element={<BrowseTeachersPage />} />
             <Route path="/donate" element={<DonatePage />} />
 
             {/* Guardian Routes (auth required, guardian role) */}
@@ -163,6 +166,14 @@ export default function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminVerificationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/ad-verifications"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminAdVerificationsPage />
                 </ProtectedRoute>
               }
             />

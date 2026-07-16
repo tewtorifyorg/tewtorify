@@ -9,7 +9,7 @@ import {
   ShieldCheck, Clock, CheckCircle2, XCircle, Eye, FileText,
   Download, ChevronDown, ChevronUp, Loader2, AlertCircle,
   Search, Filter, User, GraduationCap, MapPin, BookOpen,
-  ExternalLink, X,
+  ExternalLink, X, Megaphone, DollarSign,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import {
@@ -20,7 +20,7 @@ import {
 } from '@/lib/firestore';
 import { QUALIFICATION_LEVELS, CLASS_LEVELS, TUTORING_MODES } from '@/lib/constants';
 import { formatBDT, formatDate, timeAgo } from '@/lib/utils';
-import type { TutorProfile, VerificationStatus, User as UserType } from '@/types';
+import type { TutorProfile, TuitionRequest, VerificationStatus, AdStatus, User as UserType } from '@/types';
 
 // ---------- Types ----------
 
@@ -32,10 +32,9 @@ interface TutorWithUser extends TutorProfile {
 
 type FilterTab = 'pending' | 'verified' | 'rejected' | 'all';
 
-// ---------- Component ----------
-
 export default function AdminVerificationsPage() {
   const { user } = useAuth();
+  
   const [activeTab, setActiveTab] = useState<FilterTab>('pending');
   const [tutors, setTutors] = useState<TutorWithUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -173,7 +172,7 @@ export default function AdminVerificationsPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Verification Queue</h1>
-              <p className="text-sm text-muted-foreground">Review and verify tutor applications</p>
+              <p className="text-sm text-muted-foreground">Review and verify tutor applications & tuition ads</p>
             </div>
           </div>
         </motion.div>
@@ -507,7 +506,7 @@ export default function AdminVerificationsPage() {
         </div>
       </div>
 
-      {/* Reject Modal */}
+      {/* Reject Tutor Modal */}
       <AnimatePresence>
         {rejectModal && (
           <motion.div

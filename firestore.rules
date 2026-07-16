@@ -25,14 +25,18 @@ service cloud.firestore {
 
     // ---- Tutor Profiles ----
     match /tutorProfiles/{uid} {
-      allow read: if isAuthenticated();
+      // Allow public reads for verified tutors (Teachers page)
+      allow read: if isAuthenticated() ||
+        resource.data.verificationStatus == 'verified';
       allow create: if isOwner(uid);
       allow update: if isOwner(uid) || isAdmin();
     }
 
     // ---- Tuition Requests ----
     match /tuitionRequests/{docId} {
-      allow read: if isAuthenticated();
+      // Allow public reads for approved public ads (Browse Ads page)
+      allow read: if isAuthenticated() ||
+        (resource.data.isPublicAd == true && resource.data.adStatus == 'approved');
       allow create: if isAuthenticated();
       allow update, delete: if isAuthenticated() &&
         (request.auth.uid == resource.data.guardianUid || isAdmin());

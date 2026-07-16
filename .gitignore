@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Team Documentation
+phone_app_strategy.md
+project_status_report.md
+hackathon_submission.md

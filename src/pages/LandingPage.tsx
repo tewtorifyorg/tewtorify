@@ -8,8 +8,9 @@ import { motion } from 'framer-motion';
 import {
   GraduationCap, Shield, Heart, Users, BookOpen,
   ArrowRight, CheckCircle2, UserCheck, ClipboardCheck,
-  Search, BadgeCheck,
+  Search, BadgeCheck, LayoutDashboard,
 } from 'lucide-react';
+import { useAuth } from '@/features/auth/AuthContext';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -22,6 +23,18 @@ const fadeUp = {
 
 
 export default function LandingPage() {
+  const { userProfile } = useAuth();
+  
+  const getCtaLink = () => {
+    if (!userProfile) return '/signup';
+    switch (userProfile.role) {
+      case 'admin': return '/admin/dashboard';
+      case 'tutor': return '/tutor/dashboard';
+      case 'guardian': return '/guardian/dashboard';
+      default: return '/';
+    }
+  };
+
   return (
     <div className="overflow-hidden">
       {/* ============ HERO SECTION ============ */}
@@ -87,11 +100,11 @@ export default function LandingPage() {
               className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <Link
-                to="/signup"
+                to={getCtaLink()}
                 className="px-8 py-3.5 rounded-xl bg-white text-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
               >
-                Get Started Free
-                <ArrowRight className="h-4 w-4" />
+                {userProfile ? 'Go to Dashboard' : 'Get Started Free'}
+                {userProfile ? <LayoutDashboard className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </Link>
               <Link
                 to="/donate"
@@ -304,10 +317,10 @@ export default function LandingPage() {
                 ))}
               </ul>
               <Link
-                to="/signup"
+                to={getCtaLink()}
                 className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-sm hover:shadow-md transition-all"
               >
-                শিক্ষক খুঁজুন
+                {userProfile ? 'Dashboard' : 'শিক্ষক খুঁজুন'}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>
@@ -343,10 +356,10 @@ export default function LandingPage() {
                 ))}
               </ul>
               <Link
-                to="/signup"
+                to={getCtaLink()}
                 className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-accent text-accent-foreground text-sm font-semibold shadow-sm hover:shadow-md transition-all"
               >
-                শিক্ষক হিসেবে যোগ দিন
+                {userProfile ? 'Dashboard' : 'শিক্ষক হিসেবে যোগ দিন'}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>

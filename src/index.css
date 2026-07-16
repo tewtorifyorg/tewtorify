@@ -147,6 +147,23 @@ body {
   background: linear-gradient(135deg, oklch(0.97 0.007 70) 0%, oklch(0.94 0.012 65) 100%);
 }
 
+/* ---- Dark Mode Gradient Overrides ---- */
+.dark .gradient-primary {
+  background: linear-gradient(135deg, oklch(0.55 0.10 55), oklch(0.48 0.11 45));
+}
+
+.dark .gradient-accent {
+  background: linear-gradient(135deg, oklch(0.72 0.14 70), oklch(0.64 0.16 55));
+}
+
+.dark .gradient-hero {
+  background: linear-gradient(160deg, oklch(0.28 0.06 55) 0%, oklch(0.22 0.05 45) 50%, oklch(0.18 0.04 40) 100%);
+}
+
+.dark .gradient-warm {
+  background: linear-gradient(135deg, oklch(0.20 0.012 55) 0%, oklch(0.16 0.01 55) 100%);
+}
+
 /* ---- Verified Badge ---- */
 .verified-badge {
   color: var(--color-verified);
