@@ -1,8 +1,6 @@
 // ============================================================
 // Tewtorify — Firebase Configuration
 // ============================================================
-// Replace these values with your actual Firebase project config.
-// You can find these in the Firebase Console → Project Settings → General → Your Apps → Config.
 
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -10,18 +8,19 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'YOUR_API_KEY',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'YOUR_PROJECT.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'YOUR_PROJECT_ID',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'YOUR_PROJECT.appspot.com',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'YOUR_SENDER_ID',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || 'YOUR_APP_ID',
+  apiKey: "AIzaSyAXvnPzfoMtoa8XnWhfoov2RufWV367Pv0",
+  authDomain: "tewtorifyonline.firebaseapp.com",
+  projectId: "tewtorifyonline",
+  storageBucket: "tewtorifyonline.firebasestorage.app",
+  messagingSenderId: "603608081645",
+  appId: "1:603608081645:web:b84ba2b0c2b9f3b3f898e4",
+  measurementId: "G-YG34VVPHFZ",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export service instances
+// Export service instances (used by AuthContext, firestore.ts, etc.)
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
