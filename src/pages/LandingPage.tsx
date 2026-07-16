@@ -5,7 +5,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Shield, Heart, Users, BookOpen,
+  GraduationCap, Shield, Heart, Users, BookOpen,
   ArrowRight, CheckCircle2, UserCheck, ClipboardCheck,
   Search, BadgeCheck, LayoutDashboard, HelpCircle,
 } from 'lucide-react';
@@ -270,7 +270,6 @@ export default function LandingPage() {
       </div>
     </section>
 
-<<<<<<< HEAD
       {/* ============ HOW IT WORKS ============ */}
       <section className="py-20 bg-background border-t border-border/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -428,87 +427,48 @@ export default function LandingPage() {
         </div>
 
         <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-=======
-    {/* ============ FOR TUTORS / FOR GUARDIANS ============ */}
-    <section className="py-24 bg-surface border-t border-border-subtle">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* For Guardians */}
->>>>>>> d321e712070a31184951a289517de63c84ab468c
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-            className="p-10 lg:p-14 rounded-[32px] bg-canvas border border-border-subtle flex flex-col items-start"
           >
-            <div className="h-16 w-16 rounded-full bg-surface border border-border-subtle text-dark flex items-center justify-center mb-8">
-              <Users className="h-8 w-8" strokeWidth={1.5} />
-            </div>
-            <h3 className="text-[32px] font-bold text-heading mb-4">For Guardians</h3>
-            <p className="text-[16px] text-body mb-8 leading-relaxed max-w-md">
-              Find the right tutor without paying middlemen. Post your needs and let admins match you with verified teachers.
-            </p>
-            <ul className="space-y-4 mb-10 mt-auto w-full">
-              {['Post tuition requirements', 'Get verified tutors', 'Browse public ads', 'Leave reviews'].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[15px] font-medium text-heading">
-                  <CheckCircle2 className="h-5 w-5 text-dark shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              to="/signup"
-              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+            <motion.div
+              variants={fadeUp}
+              custom={0}
+              className="h-16 w-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6"
             >
-              শিক্ষক খুঁজুন
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </motion.div>
-
-          {/* For Tutors */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={1}
-            className="p-10 lg:p-14 rounded-[32px] bg-dark text-canvas flex flex-col items-start relative overflow-hidden"
-          >
-            {/* Dark doodle */}
-            <svg width="300" height="300" viewBox="0 0 100 100" fill="none" className="absolute -right-20 -bottom-20 text-canvas opacity-10" stroke="currentColor" strokeWidth="2">
-              <path d="M 10 50 Q 50 10 90 50 T 170 50" />
-              <path d="M 10 60 Q 50 20 90 60 T 170 60" />
-              <path d="M 10 70 Q 50 30 90 70 T 170 70" />
-            </svg>
-
-            <div className="relative z-10 h-16 w-16 rounded-full bg-canvas/10 text-canvas flex items-center justify-center mb-8">
-              <BookOpen className="h-8 w-8" strokeWidth={1.5} />
-            </div>
-            <h3 className="relative z-10 text-[32px] font-bold mb-4 text-canvas">For Tutors</h3>
-            <p className="relative z-10 text-[16px] text-canvas/80 mb-8 leading-relaxed max-w-md">
-              Get verified, build your reputation, and connect with real students. You keep 100% of your earnings.
-            </p>
-            <ul className="relative z-10 space-y-4 mb-10 mt-auto w-full">
-              {['Get verified blue tick', 'Browse open requests', 'Build your rating', 'Zero commissions'].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-[15px] font-medium">
-                  <CheckCircle2 className="h-5 w-5 text-canvas shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link
-              to="/signup"
-              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg gradient-accent text-accent-foreground text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+              <Heart className="h-8 w-8 text-white" />
+            </motion.div>
+            <motion.h2
+              variants={fadeUp}
+              custom={1}
+              className="text-3xl sm:text-4xl font-bold text-white mb-4"
             >
-              শিক্ষক হিসেবে যোগ দিন
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              আমাদের সাহায্য করুন
+            </motion.h2>
+            <motion.p
+              variants={fadeUp}
+              custom={2}
+              className="text-white/60 mb-8 leading-relaxed"
+            >
+              Tewtorify সম্পূর্ণ community donation-এ চলে। আপনার সাহায্য আমাদের
+              platform maintain, শিক্ষক verify, এবং আরও জেলায় expand করতে সাহায্য করবে।
+            </motion.p>
+            <motion.div
+              variants={fadeUp}
+              custom={3}
+            >
+              <Link
+                to="/donate"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-foreground font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+              >
+                <Heart className="h-4 w-4" />
+                Donate Now
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
   );
 }
