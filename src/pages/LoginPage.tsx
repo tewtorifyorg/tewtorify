@@ -1,5 +1,5 @@
 // ============================================================
-// Tewtorify — Login Page
+// Tewtorify — Login Page (Minimalist B&W)
 // ============================================================
 
 import { useState } from 'react';
@@ -17,6 +17,8 @@ const loginSchema = z.object({
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
+
+const inputClass = 'w-full h-12 rounded-lg border border-border-subtle bg-surface text-heading text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-dark focus:border-dark transition-all';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -62,36 +64,42 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel — Branding (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 gradient-hero items-center justify-center p-12 relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute bottom-1/4 -right-20 w-60 h-60 rounded-full bg-accent/8 blur-3xl" />
-        </div>
+    <div className="min-h-screen flex bg-canvas">
+      {/* Left Panel — Branding (desktop only) */}
+      <div className="hidden lg:flex lg:w-[45%] bg-dark flex-col justify-center p-16 relative overflow-hidden">
+        {/* Doodle decoration */}
+        <svg width="280" height="280" viewBox="0 0 100 100" fill="none" className="absolute -right-10 top-10 text-canvas opacity-5" stroke="currentColor" strokeWidth="1">
+          <circle cx="50" cy="50" r="45" />
+          <circle cx="50" cy="50" r="35" />
+          <circle cx="50" cy="50" r="25" />
+          <circle cx="50" cy="50" r="15" />
+        </svg>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="relative text-center text-white max-w-md"
+          className="relative z-10 max-w-sm"
         >
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center shadow-lg">
-              <GraduationCap className="h-8 w-8" />
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-16">
+            <div className="h-10 w-10 rounded-lg bg-canvas/10 flex items-center justify-center">
+              <GraduationCap className="h-6 w-6 text-canvas" />
             </div>
+            <span className="text-xl font-bold text-canvas">Tewtorify</span>
           </div>
-          <h1 className="text-3xl font-bold mb-4">স্বাগতম Tewtorify তে</h1>
-          <p className="text-base text-white/65 leading-relaxed">
-            পাবনার verified শিক্ষকদের সাথে আবার connect করুন।
-            সম্পূর্ণ বিনামূল্যে, community-driven.
+
+          <h1 className="text-[42px] font-bold text-canvas leading-tight tracking-tight mb-6">
+            স্বাগতম<br />Tewtorify তে
+          </h1>
+          <p className="text-[17px] text-canvas/70 leading-relaxed">
+            পাবনার verified শিক্ষকদের সাথে আবার connect করুন। সম্পূর্ণ বিনামূল্যে, community-driven.
           </p>
         </motion.div>
       </div>
 
       {/* Right Panel — Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+      <div className="w-full lg:w-[55%] flex items-center justify-center p-6 sm:p-12 bg-canvas">
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -99,26 +107,25 @@ export default function LoginPage() {
           className="w-full max-w-md"
         >
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="h-10 w-10 rounded-xl gradient-primary flex items-center justify-center text-white shadow-md">
+          <div className="lg:hidden flex items-center gap-2 mb-10">
+            <div className="h-9 w-9 rounded-lg bg-dark flex items-center justify-center text-canvas shadow-sm">
               <GraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold">Tewtorify</span>
+            <span className="text-xl font-bold text-heading">Tewtorify</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-foreground mb-1">Log In</h2>
-          <p className="text-sm text-muted-foreground mb-8">
+          <h2 className="text-[32px] font-bold text-heading mb-2 tracking-tight">Log In</h2>
+          <p className="text-[16px] text-muted mb-10">
             Enter your credentials to access your account
           </p>
 
-          {/* Error */}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm"
+              className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-red-50 text-red-600 text-sm font-medium border border-red-100"
             >
-              <AlertCircle className="h-4 w-4 shrink-0" />
+              <AlertCircle className="h-5 w-5 shrink-0" />
               {error}
             </motion.div>
           )}
@@ -126,49 +133,49 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Email */}
             <div>
-              <label htmlFor="login-email" className="block text-sm font-medium text-foreground mb-1.5">
+              <label htmlFor="login-email" className="block text-label text-heading mb-2">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                 <input
                   id="login-email"
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                  className={`${inputClass} pl-11 pr-4`}
                   {...register('email')}
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
+                <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium text-foreground mb-1.5">
+              <label htmlFor="login-password" className="block text-label text-heading mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted pointer-events-none" />
                 <input
                   id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
-                  className="w-full h-11 pl-10 pr-11 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                  className={`${inputClass} pl-11 pr-12`}
                   {...register('password')}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-heading transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>
+                <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password.message}</p>
               )}
             </div>
 
@@ -176,11 +183,11 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 rounded-lg gradient-primary text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full h-14 rounded-full bg-dark text-canvas font-semibold text-[16px] shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-2"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  <div className="h-5 w-5 rounded-full border-2 border-canvas border-t-transparent animate-spin" />
                   Logging in...
                 </span>
               ) : (
@@ -189,10 +196,9 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Footer */}
-          <p className="mt-8 text-center text-sm text-muted-foreground">
+          <p className="mt-8 text-center text-[15px] text-muted">
             Don't have an account?{' '}
-            <Link to="/signup" className="font-semibold text-primary hover:underline">
+            <Link to="/signup" className="font-semibold text-dark hover:underline">
               Sign Up
             </Link>
           </p>
