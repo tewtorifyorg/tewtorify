@@ -136,16 +136,15 @@ export default function LandingPage() {
             ))}
           </motion.div>
         </div>
-    </div>
-      </section >
+      </section>
 
-    {/* ============ WHY TEWTORIFY ============ */ }
-    < section className = "py-24 bg-surface border-y border-border-subtle relative overflow-hidden" >
-      {/* Decorative corner doodle */ }
-      < svg width = "200" height = "200" viewBox = "0 0 100 100" fill = "none" className = "absolute -top-10 -right-10 text-dark opacity-5" stroke = "currentColor" strokeWidth = "1" strokeLinecap = "round" >
+      {/* ============ WHY TEWTORIFY ============ */}
+      <section className="py-24 bg-surface border-y border-border-subtle relative overflow-hidden">
+        {/* Decorative corner doodle */}
+        <svg width="200" height="200" viewBox="0 0 100 100" fill="none" className="absolute -top-10 -right-10 text-dark opacity-5" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
            <path d="M 10 10 L 90 10 L 90 90 L 10 90 Z" transform="rotate(15 50 50)" />
            <path d="M 20 20 L 80 20 L 80 80 L 20 80 Z" transform="rotate(-10 50 50)" />
-        </svg >
+        </svg>
 
     <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
       <motion.div
@@ -205,11 +204,11 @@ export default function LandingPage() {
           </motion.div>
         ))}
       </div>
-    </div>
-      </section >
+      </div>
+    </section>
 
-    {/* ============ HOW IT WORKS ============ */ }
-    < section id = "how-it-works" className = "py-24 bg-canvas" >
+    {/* ============ HOW IT WORKS ============ */}
+    <section id="how-it-works" className="py-24 bg-canvas">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div
           initial="hidden"
@@ -269,10 +268,10 @@ export default function LandingPage() {
           ))}
         </div>
       </div>
-      </section >
+    </section>
 
-    {/* ============ FOR TUTORS / FOR GUARDIANS ============ */ }
-    < section className = "py-24 bg-surface border-t border-border-subtle" >
+    {/* ============ FOR TUTORS / FOR GUARDIANS ============ */}
+    <section className="py-24 bg-surface border-t border-border-subtle">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* For Guardians */}
@@ -349,7 +348,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </div>
-      </section >
-    </div >
+    </section>
+  </div>
   );
 }

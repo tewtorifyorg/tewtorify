@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import {
   BookOpen, MapPin, DollarSign, Loader2, AlertCircle,
-  CheckCircle2, ArrowLeft, Send
+  CheckCircle2, ArrowLeft, Send, ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -111,6 +111,7 @@ export default function GuardianPostRequestPage() {
         preferredTutorGender: data.preferredTutorGender === 'none' ? null : data.preferredTutorGender,
         timingPreference: data.timingPreference,
         status: 'open',
+        adStatus: data.isPublicAd ? 'pending' : 'pending',
         isPublicAd: data.isPublicAd,
         contactInfo: data.isPublicAd ? data.contactInfo : undefined,
       });
