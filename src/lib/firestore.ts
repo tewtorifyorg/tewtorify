@@ -146,11 +146,17 @@ export async function getGuardianRequests(
 ): Promise<TuitionRequest[]> {
   const q = query(
     tuitionRequestsRef,
-    where('guardianUid', '==', guardianUid),
-    orderBy('createdAt', 'desc')
+    where('guardianUid', '==', guardianUid)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  const requests = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as TuitionRequest);
+  
+  // Sort locally to avoid Firestore composite index requirement
+  return requests.sort((a, b) => {
+    const aTime = a.createdAt?.toMillis() || 0;
+    const bTime = b.createdAt?.toMillis() || 0;
+    return bTime - aTime;
+  });
 }
 
 export async function updateTuitionRequest(
