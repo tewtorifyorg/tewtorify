@@ -110,7 +110,7 @@ export default function LandingPage() {
             </Link>
             <Link
               to="/donate"
-              className="px-8 py-3.5 rounded-xl border border-white/20 text-white font-medium hover:bg-white/5 transition-all flex items-center gap-2"
+              className="px-8 py-3.5 rounded-xl border-2 border-dark text-dark font-bold hover:bg-dark hover:text-white transition-all flex items-center gap-2"
             >
               <Heart className="h-4 w-4" />
               Support Us
