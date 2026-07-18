@@ -91,9 +91,9 @@ export default function DonatePage() {
           className="grid grid-cols-3 gap-4 mb-10"
         >
           {[
-            { amount: '৳500', impact: 'Covers server costs for 1 month' },
-            { amount: '৳1,000', impact: 'Supports 10 tutor verifications' },
-            { amount: '৳5,000', impact: 'Keeps the platform running for 3 months' },
+            { amount: '৳50', impact: 'Covers server costs for 1 month' },
+            { amount: '৳100', impact: 'Supports 10 tutor verifications' },
+            { amount: '৳500', impact: 'Keeps the platform running for 3 months' },
           ].map((item) => (
             <div key={item.amount} className="text-center p-4 rounded-xl bg-card border border-border">
               <p className="text-xl font-bold text-primary">{item.amount}</p>

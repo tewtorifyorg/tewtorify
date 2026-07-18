@@ -107,7 +107,7 @@ export default function BrowseTeachersPage() {
               className="w-full h-11 pl-9 pr-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
-          <div className="flex gap-1 bg-muted rounded-xl p-1 shrink-0">
+          <div className="flex gap-1 bg-gray-500 rounded-xl p-1 shrink-0">
             {[
               { value: 'all', label: 'All' },
               { value: 'in-person', label: 'In-person' },
@@ -119,8 +119,8 @@ export default function BrowseTeachersPage() {
                 onClick={() => setModeFilter(opt.value)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   modeFilter === opt.value
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-white hover:text-gray-200'
                 }`}
               >
                 {opt.label}
