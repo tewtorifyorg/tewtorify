@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, MapPin, BookOpen, DollarSign, Clock, User, Users,
   Loader2, GraduationCap, Star, ShieldCheck, ChevronDown,
-  ChevronUp, Megaphone, ArrowRight, Filter,
+  ChevronUp, Megaphone, ArrowRight, Filter, Phone,
 } from 'lucide-react';
 import { getVerifiedTutorProfilesWithUser } from '@/lib/firestore';
 import {
@@ -263,6 +263,19 @@ export default function BrowseTeachersPage() {
                               <div>
                                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Department</p>
                                 <p className="text-sm text-foreground">{tutor.department}</p>
+                              </div>
+
+                              {/* Contact */}
+                              <div>
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Contact</p>
+                                {tutor.userPhone ? (
+                                  <a href={`tel:${tutor.userPhone}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500/20 transition-colors text-sm font-medium">
+                                    <Phone className="h-4 w-4" />
+                                    {tutor.userPhone}
+                                  </a>
+                                ) : (
+                                  <p className="text-sm text-muted-foreground italic">Not provided</p>
+                                )}
                               </div>
                             </div>
 
