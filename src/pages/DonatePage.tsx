@@ -17,7 +17,7 @@ const fadeUp = {
 const paymentMethods = [
   {
     name: 'bKash',
-    number: '01XXXXXXXXX',
+    number: '01303836689',
     type: 'Personal',
     icon: Phone,
     color: 'bg-pink-500/10 text-pink-600',
@@ -25,7 +25,7 @@ const paymentMethods = [
   },
   {
     name: 'Nagad',
-    number: '01XXXXXXXXX',
+    number: '01303836689',
     type: 'Personal',
     icon: Phone,
     color: 'bg-orange-500/10 text-orange-600',
@@ -33,7 +33,7 @@ const paymentMethods = [
   },
   {
     name: 'Rocket',
-    number: '01XXXXXXXXX-1',
+    number: '013038366890',
     type: 'Personal',
     icon: CreditCard,
     color: 'bg-purple-500/10 text-purple-600',
