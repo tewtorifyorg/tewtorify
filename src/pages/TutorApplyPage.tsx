@@ -11,9 +11,9 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import {
   GraduationCap, BookOpen, MapPin, DollarSign, Clock, FileText,
-  Upload, X, CheckCircle2, AlertCircle, Loader2,
+  Upload, X, CheckCircle2, AlertCircle, Loader2, Layers,
 } from 'lucide-react';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/features/auth/AuthContext';
 import { compressImageToBase64 } from '@/lib/utils';
@@ -21,6 +21,8 @@ import {
   CLASS_LEVELS, SUBJECTS, PABNA_THANAS, PABNA_SADAR_AREAS,
   TUTORING_MODES, QUALIFICATION_LEVELS, INSTITUTION_SUGGESTIONS,
   SALARY_RANGES,
+  SSC_SUBJECTS_BY_BACKGROUND, HSC_SUBJECTS_BY_BACKGROUND,
+  EDUCATION_BACKGROUNDS, type EducationBackground,
 } from '@/lib/constants';
 
 // ---------- Zod Schema ----------
@@ -52,6 +54,8 @@ export default function TutorApplyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [areaInput, setAreaInput] = useState('');
+  const [sscBackground, setSscBackground] = useState<EducationBackground | null>(userProfile?.sscBackground ?? null);
+  const [hscBackground, setHscBackground] = useState<EducationBackground | null>(userProfile?.hscBackground ?? null);
 
   const {
     register,
@@ -76,7 +80,7 @@ export default function TutorApplyPage() {
   const watchedSubjects = watch('subjects');
   const watchedAreas = watch('preferredAreas');
 
-  // Get relevant subjects based on selected class levels
+  // Get relevant subjects based on selected class levels AND education background
   const getRelevantSubjects = useCallback(() => {
     const selectedGroups = new Set(
       watchedClassLevels
@@ -88,8 +92,40 @@ export default function TutorApplyPage() {
       const subjs = SUBJECTS[group as string];
       if (subjs) subjs.forEach((s) => allSubjects.add(s));
     });
+
+    // Filter SSC/HSC subjects based on selected background
+    if (sscBackground || hscBackground) {
+      const allowedSubjects = new Set<string>();
+
+      // For non-SSC/HSC groups, allow all subjects
+      selectedGroups.forEach((group) => {
+        if (group !== 'SSC' && group !== 'HSC') {
+          const subjs = SUBJECTS[group as string];
+          if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+        }
+      });
+
+      // For SSC group, only allow subjects matching their SSC background
+      if (selectedGroups.has('SSC') && sscBackground) {
+        SSC_SUBJECTS_BY_BACKGROUND[sscBackground].forEach((s) => allowedSubjects.add(s));
+      } else if (selectedGroups.has('SSC')) {
+        const subjs = SUBJECTS['SSC'];
+        if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+      }
+
+      // For HSC group, only allow subjects matching their HSC background
+      if (selectedGroups.has('HSC') && hscBackground) {
+        HSC_SUBJECTS_BY_BACKGROUND[hscBackground].forEach((s) => allowedSubjects.add(s));
+      } else if (selectedGroups.has('HSC')) {
+        const subjs = SUBJECTS['HSC'];
+        if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+      }
+
+      return [...allSubjects].filter((s) => allowedSubjects.has(s)).sort();
+    }
+
     return [...allSubjects].sort();
-  }, [watchedClassLevels]);
+  }, [watchedClassLevels, sscBackground, hscBackground]);
 
   // Toggle functions
   const toggleClassLevel = (value: string) => {
@@ -192,8 +228,22 @@ export default function TutorApplyPage() {
     }
   };
 
-  // Steps config
+  // Save background to Firestore user doc
+  const saveBackground = async () => {
+    if (!user || !sscBackground || !hscBackground) return;
+    try {
+      await updateDoc(doc(db, 'users', user.uid), {
+        sscBackground,
+        hscBackground,
+      });
+    } catch (err) {
+      console.error('Failed to save background:', err);
+    }
+  };
+
+  // Steps config (7 steps: 0=Background, 1=Qualification, 2=Subjects, 3=Location, 4=Salary, 5=Documents, 6=Review)
   const steps = [
+    { icon: Layers, label: 'Background' },
     { icon: GraduationCap, label: 'Qualification' },
     { icon: BookOpen, label: 'Subjects' },
     { icon: MapPin, label: 'Location' },
@@ -268,8 +318,82 @@ export default function TutorApplyPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Step 0: Qualification */}
+            {/* Step 0: Education Background */}
             {currentStep === 0 && (
+              <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground mb-1">Education Background</h2>
+                  <p className="text-sm text-muted-foreground">
+                    আপনার SSC ও HSC এর বিভাগ নির্বাচন করুন — এটি আপনি কোন বিষয়ে পড়াতে পারবেন তা নির্ধারণ করবে
+                  </p>
+                </div>
+
+                {/* SSC Background */}
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-3">
+                    SSC Background (মাধ্যমিক বিভাগ) *
+                  </label>
+                  <div className="space-y-2">
+                    {EDUCATION_BACKGROUNDS.map((bg) => {
+                      const isSelected = sscBackground === bg.value;
+                      return (
+                        <button
+                          key={`ssc-${bg.value}`}
+                          type="button"
+                          onClick={() => setSscBackground(bg.value)}
+                          className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 flex items-center justify-between ${
+                            isSelected
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border hover:border-primary/30'
+                          }`}
+                        >
+                          <span className={`text-sm font-medium ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                            {bg.label}
+                          </span>
+                          {isSelected && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* HSC Background */}
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-3">
+                    HSC Background (উচ্চ মাধ্যমিক বিভাগ) *
+                  </label>
+                  <div className="space-y-2">
+                    {EDUCATION_BACKGROUNDS.map((bg) => {
+                      const isSelected = hscBackground === bg.value;
+                      return (
+                        <button
+                          key={`hsc-${bg.value}`}
+                          type="button"
+                          onClick={() => setHscBackground(bg.value)}
+                          className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all duration-200 flex items-center justify-between ${
+                            isSelected
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border hover:border-primary/30'
+                          }`}
+                        >
+                          <span className={`text-sm font-medium ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                            {bg.label}
+                          </span>
+                          {isSelected && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {!sscBackground || !hscBackground ? (
+                  <p className="text-xs text-muted-foreground italic">উভয় বিভাগ নির্বাচন করুন continue করতে</p>
+                ) : null}
+              </div>
+            )}
+
+            {/* Step 1: Qualification */}
+            {currentStep === 1 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Qualification</h2>
@@ -355,12 +479,28 @@ export default function TutorApplyPage() {
               </div>
             )}
 
-            {/* Step 1: Subjects & Class Levels */}
-            {currentStep === 1 && (
+            {/* Step 2: Subjects & Class Levels */}
+            {currentStep === 2 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Subjects & Class Levels</h2>
                   <p className="text-sm text-muted-foreground">Select the class levels and subjects you can teach</p>
+                  {(sscBackground || hscBackground) && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <span className="text-xs font-medium text-primary">Your Background:</span>
+                      {sscBackground && (
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium capitalize">
+                          SSC: {sscBackground}
+                        </span>
+                      )}
+                      {hscBackground && (
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium capitalize">
+                          HSC: {hscBackground}
+                        </span>
+                      )}
+                      <span className="text-xs text-muted-foreground">— Subjects filtered based on your background</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Class Levels */}
@@ -436,8 +576,8 @@ export default function TutorApplyPage() {
               </div>
             )}
 
-            {/* Step 2: Location & Mode */}
-            {currentStep === 2 && (
+            {/* Step 3: Location & Mode */}
+            {currentStep === 3 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Location & Mode</h2>
@@ -560,8 +700,8 @@ export default function TutorApplyPage() {
               </div>
             )}
 
-            {/* Step 3: Salary & Availability */}
-            {currentStep === 3 && (
+            {/* Step 4: Salary & Availability */}
+            {currentStep === 4 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Salary & Availability</h2>
@@ -642,8 +782,8 @@ export default function TutorApplyPage() {
               </div>
             )}
 
-            {/* Step 4: Document Upload */}
-            {currentStep === 4 && (
+            {/* Step 5: Document Upload */}
+            {currentStep === 5 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Document Upload</h2>
@@ -742,8 +882,8 @@ export default function TutorApplyPage() {
               </div>
             )}
 
-            {/* Step 5: Review & Submit */}
-            {currentStep === 5 && (
+            {/* Step 6: Review & Submit */}
+            {currentStep === 6 && (
               <div className="space-y-6 rounded-2xl bg-card border border-border p-6 sm:p-8">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Review & Submit</h2>
@@ -753,6 +893,12 @@ export default function TutorApplyPage() {
                 </div>
 
                 <div className="space-y-4">
+                  <div className="p-4 rounded-lg bg-muted/50">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">Education Background</p>
+                    <p className="text-sm text-foreground capitalize">
+                      SSC: {sscBackground || 'Not set'} | HSC: {hscBackground || 'Not set'}
+                    </p>
+                  </div>
                   <div className="p-4 rounded-lg bg-muted/50">
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">Qualification</p>
                     <p className="text-sm text-foreground">
@@ -790,7 +936,7 @@ export default function TutorApplyPage() {
                   <div className="p-4 rounded-lg bg-muted/50">
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">Documents</p>
                     <p className="text-sm text-foreground">
-                      {certificates.length} certificate(s) • NID: {nidFile ? '✓ Uploaded' : '✗ Missing'}
+                      {certificates.length} certificate(s) • NID: {nidFile ? 'Uploaded' : 'Missing'}
                     </p>
                   </div>
                 </div>
@@ -825,18 +971,26 @@ export default function TutorApplyPage() {
           <div className="mt-6 flex items-center justify-between">
             <button
               type="button"
-              onClick={() => setCurrentStep(Math.max(0, currentStep - 1) as 0 | 1 | 2 | 3 | 4 | 5)}
+              onClick={() => setCurrentStep(Math.max(0, currentStep - 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6)}
               disabled={currentStep === 0}
               className="px-5 py-2.5 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Back
             </button>
 
-            {currentStep < 5 ? (
+            {currentStep < 6 ? (
               <button
                 type="button"
-                onClick={() => setCurrentStep(Math.min(5, currentStep + 1) as 0 | 1 | 2 | 3 | 4 | 5)}
-                className="px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                onClick={() => {
+                  // On step 0, validate background selection and save to Firestore before continuing
+                  if (currentStep === 0) {
+                    if (!sscBackground || !hscBackground) return;
+                    saveBackground();
+                  }
+                  setCurrentStep(Math.min(6, currentStep + 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6);
+                }}
+                disabled={currentStep === 0 && (!sscBackground || !hscBackground)}
+                className="px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Continue
               </button>
