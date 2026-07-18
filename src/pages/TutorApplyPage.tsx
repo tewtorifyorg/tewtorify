@@ -21,6 +21,7 @@ import {
   CLASS_LEVELS, SUBJECTS, PABNA_THANAS, PABNA_SADAR_AREAS,
   TUTORING_MODES, QUALIFICATION_LEVELS, INSTITUTION_SUGGESTIONS,
   SALARY_RANGES,
+  SSC_SUBJECTS_BY_BACKGROUND, HSC_SUBJECTS_BY_BACKGROUND,
 } from '@/lib/constants';
 
 // ---------- Zod Schema ----------
@@ -76,7 +77,7 @@ export default function TutorApplyPage() {
   const watchedSubjects = watch('subjects');
   const watchedAreas = watch('preferredAreas');
 
-  // Get relevant subjects based on selected class levels
+  // Get relevant subjects based on selected class levels AND user's education background
   const getRelevantSubjects = useCallback(() => {
     const selectedGroups = new Set(
       watchedClassLevels
@@ -88,8 +89,46 @@ export default function TutorApplyPage() {
       const subjs = SUBJECTS[group as string];
       if (subjs) subjs.forEach((s) => allSubjects.add(s));
     });
+
+    // If user has education background set, filter SSC/HSC subjects accordingly
+    const sscBg = userProfile?.sscBackground;
+    const hscBg = userProfile?.hscBackground;
+
+    if (sscBg || hscBg) {
+      const allowedSubjects = new Set<string>();
+
+      // For non-SSC/HSC groups, allow all subjects (Pre-Primary, Primary, Junior, etc.)
+      selectedGroups.forEach((group) => {
+        if (group !== 'SSC' && group !== 'HSC') {
+          const subjs = SUBJECTS[group as string];
+          if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+        }
+      });
+
+      // For SSC group, only allow subjects matching their SSC background
+      if (selectedGroups.has('SSC') && sscBg) {
+        SSC_SUBJECTS_BY_BACKGROUND[sscBg].forEach((s) => allowedSubjects.add(s));
+      } else if (selectedGroups.has('SSC')) {
+        // If no SSC background set, allow all SSC subjects
+        const subjs = SUBJECTS['SSC'];
+        if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+      }
+
+      // For HSC group, only allow subjects matching their HSC background
+      if (selectedGroups.has('HSC') && hscBg) {
+        HSC_SUBJECTS_BY_BACKGROUND[hscBg].forEach((s) => allowedSubjects.add(s));
+      } else if (selectedGroups.has('HSC')) {
+        // If no HSC background set, allow all HSC subjects
+        const subjs = SUBJECTS['HSC'];
+        if (subjs) subjs.forEach((s) => allowedSubjects.add(s));
+      }
+
+      // Intersect: only show subjects that are in both allSubjects AND allowedSubjects
+      return [...allSubjects].filter((s) => allowedSubjects.has(s)).sort();
+    }
+
     return [...allSubjects].sort();
-  }, [watchedClassLevels]);
+  }, [watchedClassLevels, userProfile?.sscBackground, userProfile?.hscBackground]);
 
   // Toggle functions
   const toggleClassLevel = (value: string) => {
@@ -361,6 +400,22 @@ export default function TutorApplyPage() {
                 <div>
                   <h2 className="text-lg font-semibold text-foreground mb-1">Subjects & Class Levels</h2>
                   <p className="text-sm text-muted-foreground">Select the class levels and subjects you can teach</p>
+                  {(userProfile?.sscBackground || userProfile?.hscBackground) && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <span className="text-xs font-medium text-primary">📋 Your Background:</span>
+                      {userProfile?.sscBackground && (
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium capitalize">
+                          SSC: {userProfile.sscBackground}
+                        </span>
+                      )}
+                      {userProfile?.hscBackground && (
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium capitalize">
+                          HSC: {userProfile.hscBackground}
+                        </span>
+                      )}
+                      <span className="text-xs text-muted-foreground">— Subjects filtered based on your background</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Class Levels */}

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import type { UserRole } from '@/types';
+import { EDUCATION_BACKGROUNDS, type EducationBackground } from '@/lib/constants';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -33,8 +34,11 @@ const inputClass = 'w-full h-12 rounded-lg border border-border-subtle bg-surfac
 export default function SignupPage() {
   const { signup, userProfile } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState<1 | 2>(1);
+  // Steps: 1 = role, 2 = education bg (tutor only), 3 = form
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [sscBackground, setSscBackground] = useState<EducationBackground | null>(null);
+  const [hscBackground, setHscBackground] = useState<EducationBackground | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +65,15 @@ export default function SignupPage() {
     setError('');
     setIsLoading(true);
     try {
-      await signup(data.email, data.password, data.name, data.phone, selectedRole);
+      await signup(
+        data.email,
+        data.password,
+        data.name,
+        data.phone,
+        selectedRole,
+        sscBackground ?? undefined,
+        hscBackground ?? undefined
+      );
       if (selectedRole === 'tutor') {
         navigate('/tutor/apply');
       } else {
@@ -88,6 +100,32 @@ export default function SignupPage() {
     }
   };
 
+  const handleStep1Continue = () => {
+    if (!selectedRole) return;
+    if (selectedRole === 'tutor') {
+      setStep(2); // tutors go to education background step
+    } else {
+      setStep(3); // guardians skip to form
+    }
+  };
+
+  const handleStep2Continue = () => {
+    if (!sscBackground || !hscBackground) return;
+    setStep(3);
+  };
+
+  const handleBack = () => {
+    if (step === 3) {
+      if (selectedRole === 'tutor') {
+        setStep(2);
+      } else {
+        setStep(1);
+      }
+    } else if (step === 2) {
+      setStep(1);
+    }
+  };
+
   const roles = [
     {
       value: 'guardian' as UserRole,
@@ -104,6 +142,10 @@ export default function SignupPage() {
       features: ['Verified হয়ে blue tick পান', 'Open request browse করুন', 'Reputation তৈরি করুন'],
     },
   ];
+
+  // Step progress indicator for tutors (3 steps) or guardians (2 steps)
+  const totalSteps = selectedRole === 'tutor' ? 3 : 2;
+  const currentStepIndex = selectedRole === 'tutor' ? step : (step === 1 ? 1 : 2);
 
   return (
     <div className="min-h-screen flex bg-canvas">
@@ -166,6 +208,20 @@ export default function SignupPage() {
             </div>
             <span className="text-xl font-bold text-heading">Tewtorify</span>
           </div>
+
+          {/* Step Progress Bar */}
+          {selectedRole && (
+            <div className="flex items-center gap-2 mb-8">
+              {Array.from({ length: totalSteps }, (_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                    i + 1 <= currentStepIndex ? 'bg-dark' : 'bg-border-subtle'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
 
           <AnimatePresence mode="wait">
             {step === 1 ? (
@@ -231,7 +287,7 @@ export default function SignupPage() {
                 </div>
 
                 <button
-                  onClick={() => selectedRole && setStep(2)}
+                  onClick={handleStep1Continue}
                   disabled={!selectedRole}
                   className="w-full h-14 mt-8 rounded-full bg-dark text-canvas font-semibold text-[16px] shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
@@ -246,17 +302,125 @@ export default function SignupPage() {
                   </Link>
                 </p>
               </motion.div>
-            ) : (
-              /* Step 2: Registration Form */
+            ) : step === 2 ? (
+              /* Step 2: Education Background (Tutor only) */
               <motion.div
-                key="step2"
+                key="step2-bg"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <button
+                  onClick={handleBack}
+                  className="flex items-center gap-2 text-[14px] text-muted hover:text-heading transition-colors mb-8 font-medium"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </button>
+
+                <h2 className="text-[32px] font-bold text-heading mb-2 tracking-tight">
+                  Education Background
+                </h2>
+                <p className="text-[16px] text-muted mb-10">
+                  আপনার SSC ও HSC এর বিভাগ নির্বাচন করুন — এটি আপনি কোন বিষয়ে পড়াতে পারবেন তা নির্ধারণ করবে
+                </p>
+
+                {/* SSC Background */}
+                <div className="mb-8">
+                  <label className="block text-[15px] font-semibold text-heading mb-4">
+                    SSC Background (মাধ্যমিক বিভাগ) *
+                  </label>
+                  <div className="space-y-3">
+                    {EDUCATION_BACKGROUNDS.map((bg) => {
+                      const isSelected = sscBackground === bg.value;
+                      return (
+                        <button
+                          key={`ssc-${bg.value}`}
+                          type="button"
+                          onClick={() => setSscBackground(bg.value)}
+                          className={`w-full text-left px-5 py-4 rounded-[14px] border-2 transition-all duration-200 flex items-center gap-4 ${
+                            isSelected
+                              ? 'border-dark bg-dark text-canvas shadow-md scale-[1.01]'
+                              : 'border-border-subtle bg-surface text-heading hover:border-dark/50 hover:bg-canvas'
+                          }`}
+                        >
+                          <span className="text-2xl">{bg.emoji}</span>
+                          <div>
+                            <span className={`font-semibold text-[15px] ${isSelected ? 'text-canvas' : 'text-heading'}`}>
+                              {bg.label}
+                            </span>
+                          </div>
+                          {isSelected && (
+                            <CheckCircle2 className="h-5 w-5 ml-auto text-canvas" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* HSC Background */}
+                <div className="mb-8">
+                  <label className="block text-[15px] font-semibold text-heading mb-4">
+                    HSC Background (উচ্চ মাধ্যমিক বিভাগ) *
+                  </label>
+                  <div className="space-y-3">
+                    {EDUCATION_BACKGROUNDS.map((bg) => {
+                      const isSelected = hscBackground === bg.value;
+                      return (
+                        <button
+                          key={`hsc-${bg.value}`}
+                          type="button"
+                          onClick={() => setHscBackground(bg.value)}
+                          className={`w-full text-left px-5 py-4 rounded-[14px] border-2 transition-all duration-200 flex items-center gap-4 ${
+                            isSelected
+                              ? 'border-dark bg-dark text-canvas shadow-md scale-[1.01]'
+                              : 'border-border-subtle bg-surface text-heading hover:border-dark/50 hover:bg-canvas'
+                          }`}
+                        >
+                          <span className="text-2xl">{bg.emoji}</span>
+                          <div>
+                            <span className={`font-semibold text-[15px] ${isSelected ? 'text-canvas' : 'text-heading'}`}>
+                              {bg.label}
+                            </span>
+                          </div>
+                          {isSelected && (
+                            <CheckCircle2 className="h-5 w-5 ml-auto text-canvas" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleStep2Continue}
+                  disabled={!sscBackground || !hscBackground}
+                  className="w-full h-14 rounded-full bg-dark text-canvas font-semibold text-[16px] shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                >
+                  Continue
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+
+                <p className="mt-8 text-center text-[15px] text-muted">
+                  Already have an account?{' '}
+                  <Link to="/login" className="font-semibold text-dark hover:underline">
+                    Log In
+                  </Link>
+                </p>
+              </motion.div>
+            ) : (
+              /* Step 3: Registration Form */
+              <motion.div
+                key="step3"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
               >
                 <button
-                  onClick={() => setStep(1)}
+                  onClick={handleBack}
                   className="flex items-center gap-2 text-[14px] text-muted hover:text-heading transition-colors mb-8 font-medium"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -269,6 +433,13 @@ export default function SignupPage() {
                 <p className="text-[16px] text-muted mb-10">
                   Signing up as{' '}
                   <span className="font-semibold text-dark capitalize">{selectedRole}</span>
+                  {selectedRole === 'tutor' && sscBackground && hscBackground && (
+                    <span className="block text-[13px] text-muted mt-1">
+                      SSC: <span className="font-medium text-heading capitalize">{sscBackground}</span>
+                      {' · '}
+                      HSC: <span className="font-medium text-heading capitalize">{hscBackground}</span>
+                    </span>
+                  )}
                 </p>
 
                 {error && (

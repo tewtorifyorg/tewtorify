@@ -3,6 +3,7 @@
 // ============================================================
 
 import { Timestamp } from 'firebase/firestore';
+import type { EducationBackground } from '@/lib/constants';
 
 // ---------- Enums / Unions ----------
 
@@ -32,6 +33,8 @@ export interface User {
   role: UserRole;
   createdAt: Timestamp;
   profilePhotoUrl?: string;
+  sscBackground?: EducationBackground;
+  hscBackground?: EducationBackground;
 }
 
 // ---------- Tutor Profiles ----------
