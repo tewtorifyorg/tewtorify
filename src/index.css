@@ -15,7 +15,7 @@
   /* Text & Borders */
   --color-heading: #1D1D1F;
   --color-body: #515154;
-  --color-muted: #86868B;
+  --color-muted: #F5F5F7;
   --color-border-subtle: #E5E5EA;
   --color-success: #34C759;
 
@@ -29,6 +29,8 @@
   --color-popover: #FFFFFF;
   --color-popover-foreground: #1D1D1F;
   --color-muted-foreground: #86868B;
+  --color-accent: #F0F0F2;
+  --color-accent-foreground: #1D1D1F;
   --color-border: #E5E5EA;
   --color-input: #E5E5EA;
   --color-ring: #000000;
@@ -62,7 +64,7 @@
 
   --color-heading: #F5F5F7;
   --color-body: #A1A1A6;
-  --color-muted: #6E6E73;
+  --color-muted: #1A1A1A;
   --color-border-subtle: #2D2D2F;
   --color-success: #30D158;
 
@@ -75,6 +77,8 @@
   --color-popover: #1C1C1E;
   --color-popover-foreground: #F5F5F7;
   --color-muted-foreground: #6E6E73;
+  --color-accent: #2C2C2E;
+  --color-accent-foreground: #F5F5F7;
   --color-border: #2D2D2F;
   --color-input: #2D2D2F;
   --color-ring: #FFFFFF;

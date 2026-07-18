@@ -290,7 +290,7 @@ export default function TutorApplyPage() {
                 <div
                   className={`h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                     isDone
-                      ? 'gradient-primary text-white'
+                      ? 'gradient-primary'
                       : isActive
                       ? 'bg-primary/20 text-primary ring-2 ring-primary'
                       : 'bg-muted text-muted-foreground'
@@ -524,7 +524,7 @@ export default function TutorApplyPage() {
                                 onClick={() => toggleClassLevel(level.value)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                                   isSelected
-                                    ? 'gradient-primary text-white shadow-sm'
+                                    ? 'gradient-primary shadow-sm'
                                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                 }`}
                               >
@@ -990,7 +990,7 @@ export default function TutorApplyPage() {
                   setCurrentStep(Math.min(6, currentStep + 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6);
                 }}
                 disabled={currentStep === 0 && (!sscBackground || !hscBackground)}
-                className="px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-5 py-2.5 rounded-lg gradient-primary text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Continue
               </button>
@@ -998,7 +998,7 @@ export default function TutorApplyPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-2.5 rounded-lg gradient-primary text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>
