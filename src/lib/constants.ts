@@ -226,9 +226,9 @@ export const DAYS_OF_WEEK = [
 export type EducationBackground = 'science' | 'commerce' | 'arts';
 
 export const EDUCATION_BACKGROUNDS = [
-  { value: 'science' as EducationBackground, label: 'Science (বিজ্ঞান)', emoji: '🔬' },
-  { value: 'commerce' as EducationBackground, label: 'Commerce (ব্যবসায় শিক্ষা)', emoji: '📊' },
-  { value: 'arts' as EducationBackground, label: 'Arts / Humanities (মানবিক)', emoji: '📚' },
+  { value: 'science' as EducationBackground, label: 'Science (বিজ্ঞান)' },
+  { value: 'commerce' as EducationBackground, label: 'Commerce (ব্যবসায় শিক্ষা)' },
+  { value: 'arts' as EducationBackground, label: 'Arts / Humanities (মানবিক)' },
 ] as const;
 
 // Subjects a teacher is qualified to teach based on their SSC background

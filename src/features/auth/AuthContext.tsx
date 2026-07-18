@@ -24,7 +24,6 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import type { User, UserRole } from '@/types';
-import type { EducationBackground } from '@/lib/constants';
 
 // ---------- Context Type ----------
 
@@ -38,9 +37,7 @@ interface AuthContextType {
     password: string,
     name: string,
     phone: string,
-    role: UserRole,
-    sscBackground?: EducationBackground,
-    hscBackground?: EducationBackground
+    role: UserRole
   ) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -101,9 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     name: string,
     phone: string,
-    role: UserRole,
-    sscBackground?: EducationBackground,
-    hscBackground?: EducationBackground
+    role: UserRole
   ) => {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     const uid = credential.user.uid;
@@ -115,8 +110,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       phone,
       role,
       createdAt: serverTimestamp() as User['createdAt'],
-      ...(sscBackground && { sscBackground }),
-      ...(hscBackground && { hscBackground }),
     };
 
     await setDoc(doc(db, 'users', uid), userData);
