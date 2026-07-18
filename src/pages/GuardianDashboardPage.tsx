@@ -143,6 +143,10 @@ export default function GuardianDashboardPage() {
                         ))}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                        <span className="flex items-center gap-1 font-medium text-foreground">
+                          <BookOpen className="h-3 w-3" />
+                          {CLASS_LEVELS.find((l) => l.value === req.studentClassLevel)?.label || req.studentClassLevel}
+                        </span>
                         <span className="flex items-center gap-1">
                           <MapPin className="h-3 w-3" />{req.area}
                         </span>
