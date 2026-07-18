@@ -50,7 +50,7 @@ export default function GuardianDashboardPage() {
       case 'matched':
         return <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 text-xs font-medium">Matched</span>;
       case 'closed':
-        return <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium">Closed</span>;
+        return <span className="px-2 py-0.5 rounded-full bg-black/10 dark:bg-white/10 text-foreground/80 text-xs font-medium">Closed</span>;
       default:
         return null;
     }
@@ -139,7 +139,7 @@ export default function GuardianDashboardPage() {
                       </div>
                       <div className="flex flex-wrap gap-1.5 mb-2">
                         {req.subjects.map((s) => (
-                          <span key={s} className="px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs">{s}</span>
+                          <span key={s} className="px-2 py-0.5 rounded bg-black/10 dark:bg-white/10 text-foreground/80 text-xs font-medium">{s}</span>
                         ))}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
